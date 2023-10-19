@@ -656,16 +656,6 @@
         var fechaElement = document.getElementById("fechaR").textContent = fecha;
         var fecha_entregaElement = document.getElementById("hora").textContent = fecha_entrega;
 
-        const propinaCell = document.getElementById("propinaCell");
-        var propinaElement = document.getElementById("propina");
-                    // Verifica si domi es igual a "N/A"
-            if (propina == "NaN") {
-                    // Si domi es "N/A", oculta el elemento <td> que contiene la etiqueta y el valor
-                propinaCell.style.display = "none";
-            } else {
-             // Si domi no es "N/A", muestra el valor en el elemento <h2>
-             propinaElement.textContent = propina;
-            }  
 
         const domicilioCell = document.getElementById("domicilioCell");
         var domiElement = document.getElementById("domi");
