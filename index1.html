@@ -106,7 +106,7 @@
         var fecha = params.has('fecha') ? params.get('fecha') : "dd/mm/aaaa hh:mm:ss";
         var fecha_entrega = params.has('fecha_entrega') ? params.get('fecha_entrega') : "hh:mm:ss";
         var domi = params.has('domi') ? params.get('domi') : "N/A";
-        var propina = params.has('propina') ? params.get('propina') : "N/A";
+        
 
         var total = params.has('total') ? params.get('total') : "";
         var subtotal_desc = params.has('subtotal_desc') ? params.get('subtotal_desc') : " ";
@@ -119,7 +119,7 @@
         var p_units = params.has('p_unit') ? params.get('p_unit') : "0.00";
         
         //Formato de 2 decimales
-        propina = parseFloat(propina).toLocaleString('es-ES', { minimumFractionDigits: 0 });
+    
         domi = parseFloat(domi).toLocaleString('es-ES', { minimumFractionDigits: 0 });
         total = parseFloat(total).toLocaleString('es-ES', { minimumFractionDigits: 0 });
         descuento = parseFloat(descuento).toLocaleString('es-ES', { minimumFractionDigits: 0 });
