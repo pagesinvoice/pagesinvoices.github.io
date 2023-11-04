@@ -144,7 +144,8 @@
                 
             result[id] = {
                 cantidad: cantidades[id],
-                descripcion: descripciones[id] + (tipos[id] !== undefined ? " " + tipos[id] : ""),
+                descripcion: descripciones[id],
+                tipos: (tipos[id] !== undefined ? " " + tipos[id] : ""),
                 obs: observacionesProducto[id], // Obtener las observaciones correspondientes
             };
         });
