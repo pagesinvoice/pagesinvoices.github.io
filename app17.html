@@ -87,6 +87,18 @@
         margin: 0;
         
     }
+    .ticket{
+        margin: 0;
+        
+    }
+    .mesero1{
+        margin: 0;
+        
+    }
+    .mesero2{
+        margin: 0;
+        
+    }
   
 
     </style>
@@ -112,7 +124,7 @@
         //Recibe los datos de los servicios (separados por comas)
         var cantidades = params.has('cantidades') ? params.get('cantidades') : "0";
         var descripciones = params.has('servicios') ? params.get('servicios') : "No hay articulos";
-        var p_units = params.has('p_unit') ? params.get('p_unit') : "0.00";
+        var mesero = params.has('mesero') ? params.get('mesero') : "---";
         
         //Formato de 2 decimales
         domi = parseFloat(domi).toLocaleString('es-ES', { minimumFractionDigits: 0 });
@@ -120,7 +132,6 @@
         //crea una lista de cada columna a partir de las comas.
         cantidades = cantidades.split(",");
         descripciones = descripciones.split(","); 
-        p_units = p_units.split(",");
         observacionesProducto=observacionesProducto.split(';');
         console.log(observacionesProducto);
 
@@ -132,7 +143,6 @@
             result[id] = {
                 cantidad: cantidades[id],
                 descripcion: descripciones[id], // + " " + detalles[id], 
-                precio_unit: parseFloat(p_units[id]).toLocaleString('es-ES', { minimumFractionDigits: 0 }),
                 obs: observacionesProducto[id], // Obtener las observaciones correspondientes
             };
         });
@@ -140,37 +150,31 @@
     </script>
     <div id="thermal-pos">
         <div class="label">
-            <b>TICKET:</b>
-            <h1 class="nro_boleta" id="nro_boleta_id" ></h1>
-            <h1 class="nro_mesa" id="nro_mesa_id" ></h1>
+            <h1 class="ticket">TICKET</h1>
+            <h2 class="nro_boleta" id="nro_boleta_id" ></h2>
+            <h2 class="nro_mesa" id="nro_mesa_id" ></h2>
             <h3 class="direccion" id="nro_direccion_id" ></h3>
+            <h1 class="mesero1">MESERO</h1>
+            <h2 class="mesero2" id="mesero_id" ></h2>
         </div>
         <div class="label">
             <p class="fecha_recepcion">
-                FECHA DE RECEPCION:
+                FECHA DE RECEPCION Y HORA:
                 <br>
                 <b id="fechaR"></b>
+                <b id="hora"></b>
+                <br>
             </p>
 
         </div>
 
         <!-- <div class="line">***********************************************</div> -->
-        
-        <div class="label">
-            <p class="fecha_entrega">
-                <b>
-                    Hora: <br>
-                    <span id="hora"></span>
-                </b>
-            </p>
-        </div>
    
         <table class="table">
             <tbody id="tablaBody">
                 <tr class="table-header" >
                     <th><h2>Cant</h2></th>
                     <th><h2>Descripcion</h2></th>
-                    <th><h2>Total</h2></th>
                 </tr>
                 <script>
                     /*var result = [
@@ -188,7 +192,6 @@
                     newRow.innerHTML = `
                         <td class="item">${row.cantidad}</td>
                         <td class="item">${row.descripcion}</td>
-                        <td class="item">${row.precio_unit}</td>
                     `;
                         tablaBody.appendChild(newRow);
                         
@@ -201,7 +204,6 @@
                 </script>
             </tbody>
         </table>
-        <br/>
         <p class="saldo-text">
             <b><span class="estado-deuda" id="estado"></span></b>
         </p>
@@ -222,6 +224,7 @@
         var nroBoletaElement = document.getElementById("nro_boleta_id").textContent = nro_boleta;
         var nroMesaElement = document.getElementById("nro_mesa_id").textContent = nro_mesa;
         var nroDireccion = document.getElementById("nro_direccion_id").textContent = direc;
+        var nroMesero = document.getElementById("mesero_id").textContent = mesero;
 
 
         var fechaElement = document.getElementById("fechaR").textContent = fecha;
