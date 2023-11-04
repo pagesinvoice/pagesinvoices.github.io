@@ -177,6 +177,7 @@
                 <tr class="table-header" >
                     <th><h2>Cant</h2></th>
                     <th><h2>Descripcion</h2></th>
+                    <th><h2>Obs.</h2></th>
                     
                 </tr>
                 <script>
@@ -195,7 +196,7 @@
                     newRow.innerHTML = `
                         <td class="item">${row.cantidad}</td>
                         <td class="item">${row.descripcion}</td>
-                        
+                        <td class="item">${row.tipos}</td>
                     `;
                         tablaBody.appendChild(newRow);
                         
