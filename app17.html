@@ -124,6 +124,7 @@
         //Recibe los datos de los servicios (separados por comas)
         var cantidades = params.has('cantidades') ? params.get('cantidades') : "0";
         var descripciones = params.has('servicios') ? params.get('servicios') : "No hay articulos";
+        var tipos = params.has('tipospizzas') ? params.get('tipospizzas') : "No hay articulos";
         var mesero = params.has('mesero') ? params.get('mesero') : "---";
         
         //Formato de 2 decimales
@@ -131,7 +132,8 @@
         
         //crea una lista de cada columna a partir de las comas.
         cantidades = cantidades.split(",");
-        descripciones = descripciones.split(","); 
+        descripciones = descripciones.split(",");
+        tipos = tipos.split(","); 
         observacionesProducto=observacionesProducto.split(';');
         console.log(observacionesProducto);
 
@@ -143,6 +145,7 @@
             result[id] = {
                 cantidad: cantidades[id],
                 descripcion: descripciones[id], // + " " + detalles[id], 
+                tipos: tipos[id],
                 obs: observacionesProducto[id], // Obtener las observaciones correspondientes
             };
         });
@@ -175,6 +178,7 @@
                 <tr class="table-header" >
                     <th><h2>Cant</h2></th>
                     <th><h2>Descripcion</h2></th>
+                    <th><h2>Tipos</h2></th>
                 </tr>
                 <script>
                     /*var result = [
@@ -192,6 +196,7 @@
                     newRow.innerHTML = `
                         <td class="item">${row.cantidad}</td>
                         <td class="item">${row.descripcion}</td>
+                        <td class="item">${row.tipos}</td>
                     `;
                         tablaBody.appendChild(newRow);
                         
