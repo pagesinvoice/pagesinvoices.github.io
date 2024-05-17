@@ -563,6 +563,7 @@ l-28 20 -34 -37 c-19 -20 -39 -37 -45 -37 -5 0 -24 28 -40 63 -17 34 -35 69
                     tablaBody.appendChild(spaceRow);
 
                 </script>
+                 <!--
                 <tr class="table-footer top-line">
                     <td class=""  colspan="2" id="propincell"><h4>Propina Sugerida:</h4></td>
                     <td colspan="2"><h4 id="propina"></h4></td>
@@ -571,7 +572,8 @@ l-28 20 -34 -37 c-19 -20 -39 -37 -45 -37 -5 0 -24 28 -40 63 -17 34 -35 69
                     <td class=""  colspan="2" id="domicilioCell"><h4>DOMICILIO:</h4></td>
                     <td colspan="2"><h4 id="domi"></h4></td>
                 </tr>
-               
+                -->
+        
                 <tr class="table-footer">
                     <td colspan="2"><h2>EFECTIVO:</h2></td>
                     <td colspan="2"><h2 id="efectivo"></h2></td>
@@ -615,7 +617,7 @@ l-28 20 -34 -37 c-19 -20 -39 -37 -45 -37 -5 0 -24 28 -40 63 -17 34 -35 69
         var fechaElement = document.getElementById("fechaR").textContent = fecha;
         var fecha_entregaElement = document.getElementById("hora").textContent = fecha_entrega;
 
-        const propinaCell = document.getElementById("propinaCell");
+        /*const propinaCell = document.getElementById("propinaCell");
         var propinaElement = document.getElementById("propina");
                     // Verifica si domi es igual a "N/A"
             if (propina == "NaN") {
@@ -635,7 +637,7 @@ l-28 20 -34 -37 c-19 -20 -39 -37 -45 -37 -5 0 -24 28 -40 63 -17 34 -35 69
             } else {
              // Si domi no es "N/A", muestra el valor en el elemento <h2>
              domiElement.textContent = domi;
-            }       
+            }   */    
         var totalElement = document.getElementById("total").textContent = total;
         var subtotal_descElement = document.getElementById("efectivo").textContent = descuento;
         var descuentoElement = document.getElementById("devueltas").textContent = subtotal_desc;
