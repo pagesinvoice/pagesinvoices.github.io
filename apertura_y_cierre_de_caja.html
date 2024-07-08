@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reporte de Cierre Caja</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+      }
+      .info-block {
+        margin-bottom: 20px;
+      }
+      .info-block p {
+        margin: 5px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      .totals {
+        font-weight: bold;
+      }
+      .observation {
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-left: 5px solid #2c3e50;
+      }
+      .warning {
+        color: #e74c3c;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>REPORTE DE CIERRE CAJA</h1>
+
+    <div class="info-block">
+      <p><strong>Nombre:</strong> Jhonnier Mejia</p>
+      <p><strong>Generado:</strong> 7/06/2024 1:23:09 p. m.</p>
+      <p><strong>Desde:</strong> 6/06/2024 , 11:33 a. m.</p>
+      <p><strong>Hasta:</strong> 6/06/2024 , 11:33 a. m.</p>
+      <p><strong>¿Cuadro Caja?:</strong> NO SE AH REVISADO</p>
+      <p>
+        <strong>Valor Faltante:</strong> $ 0 , Valor Faltante calculado: $ 0,00
+      </p>
+      <p>
+        <strong>Valor Excedente:</strong> $ 0 , Valor Excedente calculado: $
+        0,00
+      </p>
+      <p>
+        <strong>Efectivo de Apertura:</strong> $ 150.000,00 , Efectivo de
+        Cierre: $ 334.000,00
+      </p>
+    </div>
+
+    <table>
+      <tr>
+        <th>NOMBRES</th>
+        <th>Apertura Cant 12 Onz licor</th>
+        <th>Cierre Cant 12 Onz licor</th>
+        <th>Apertura Cant 12 Onz sin licor</th>
+        <th>Cierre Cant 12 Onz sin licor</th>
+        <th>Apertura Cant 12 Onz cremoso</th>
+        <th>Cierre Cant 12 Onz cremoso</th>
+        <th>Apertura Cant 24 Onz</th>
+        <th>Cierre Cant 24 Onz</th>
+      </tr>
+      <tr>
+        <td>CANTIDADES</td>
+        <td>39</td>
+        <td>33</td>
+        <td>38</td>
+        <td>22</td>
+        <td>0</td>
+        <td>0</td>
+        <td>8</td>
+        <td>8</td>
+      </tr>
+      <tr>
+        <td>DIFERENCIA</td>
+        <td colspan="2">6</td>
+        <td colspan="2">16</td>
+        <td colspan="2">0</td>
+        <td colspan="2">0</td>
+      </tr>
+    </table>
+
+    <div class="totals">
+      <p>Total 12 Onz: 77</p>
+      <p>Total 24 Onz: 8</p>
+      <p>Generado entre las fechas (Total de efectivo en caja): $ 184.000,00</p>
+    </div>
+
+    <h2>TOTAL DE VENTAS: $ 200.000</h2>
+
+    <table>
+      <tr>
+        <th>CONCEPTO</th>
+        <th>VALOR</th>
+      </tr>
+      <tr>
+        <td>Efectivo Recibido:</td>
+        <td>$ 184.000</td>
+      </tr>
+      <tr>
+        <td>Transferencias:</td>
+        <td>$ 16.000</td>
+      </tr>
+      <tr>
+        <td>Tarjeta:</td>
+        <td>$ 0</td>
+      </tr>
+      <tr>
+        <td>Número de Ordenes Repartidas:</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>Efectivo Repartido:</td>
+        <td>$ 0</td>
+      </tr>
+      <tr>
+        <td>Transferencias Repartidas:</td>
+        <td>$ 0,00</td>
+      </tr>
+      <tr>
+        <td>Total de efectivo en caja - app:</td>
+        <td>$ 184.000</td>
+      </tr>
+      <tr>
+        <td>Total de Transferencias:</td>
+        <td>$ 16.000</td>
+      </tr>
+    </table>
+
+    <p class="warning">
+      Si el valor en ROJO es mayor que el VERDE quiere decir que hace falta
+      efectivo en caja (posiblemente diste más cambio, o registraste algunas
+      ventas como si te hubieran pagado en efectivo pero te las pagaron por
+      transferencias u otros medios revisar bien.) así mismo con el total de
+      transferencias.
+    </p>
+
+    <div class="observation">
+      <h3>Observaciones:</h3>
+      <p>190.000 guardados en el cajón de la casa.</p>
+      <p>Préstamos 0</p>
+      <p>Sacamos 0</p>
+      <p>Nos prestó 2.000 jhon burguer.</p>
+      <p>0 vasos dañado con licor</p>
+      <p>0 vasos dañados sin licor</p>
+    </div>
+
+    <div>
+      <h3>DINERO FALTANTE:</h3>
+      <h3>DINERO EXEDENTE:</h3>
+    </div>
+  </body>
+</html>
