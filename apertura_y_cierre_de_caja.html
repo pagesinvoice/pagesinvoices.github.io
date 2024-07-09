@@ -52,48 +52,23 @@
     </style>
   </head>
   <body>
-    <script>
-      const params = new URLSearchParams(window.location.search);
-      // Obtener los valores de los parámetros
-      var nombre = params.has("nombre") ? params.get("nombre") : "---";
-      console.log(nombre);
-      var desde = params.has("desde") ? params.get("desde") : "---";
-      var Generado = params.has("Generado") ? params.get("Generado") : "---";
-      var cuadro = params.has("cuadro") ? params.get("cuadro") : "---";
-      var faltante = params.has("faltante") ? params.get("faltante") : "---";
-      var faltantecalculado = params.has("faltantecalculado")
-        ? params.get("faltantecalculado")
-        : "---";
-      var excedentecalculado = params.has("excedentecalculado")
-        ? params.get("excedentecalculado")
-        : "---";
-      var cajaapp = params.has("cajaapp") ? params.get("cajaapp") : "---";
-
-      var selctinsumos = params.has("selctinsumos")
-        ? params.get("selctinsumos")
-        : "---";
-
-      selctinsumos = selctinsumos.split(",");
-    </script>
     <h1>REPORTE DE CIERRE CAJA</h1>
 
     <div class="info-block">
       <p id="nombre_id"><strong>Nombre:</strong></p>
       <p id="generado_id"><strong>Generado:</strong></p>
-      <p><strong>Desde:</strong> 6/06/2024 , 11:33 a. m.</p>
-      <p><strong>Hasta:</strong> 6/06/2024 , 11:33 a. m.</p>
-      <p><strong>¿Cuadro Caja?:</strong> NO SE AH REVISADO</p>
-      <p>
-        <strong>Valor Faltante:</strong> $ 0 , Valor Faltante calculado: $ 0,00
+      <p id="desde_id"><strong>Desde:</strong></p>
+      <p id="cuadro_id"><strong>¿Cuadro Caja?:</strong></p>
+      <p id="faltante_id"><strong>Valor Faltante:</strong></p>
+      <p id="faltantecalculado_id">
+        <strong>Valor Faltante calculado:</strong>
       </p>
-      <p>
-        <strong>Valor Excedente:</strong> $ 0 , Valor Excedente calculado: $
-        0,00
+      <p id="excedente_id"><strong>Valor Excedente:</strong></p>
+      <p id="excedentecalculado_id">
+        <strong>Valor Excedente calculado:</strong>
       </p>
-      <p>
-        <strong>Efectivo de Apertura:</strong> $ 150.000,00 , Efectivo de
-        Cierre: $ 334.000,00
-      </p>
+      <p id="cajaapp_id"><strong>Total de efectivo en caja - app:</strong></p>
+      <p id="selctinsumos_id"><strong>Selct Insumos:</strong></p>
     </div>
 
     <table>
@@ -195,10 +170,38 @@
 
     <div>
       <h3>DINERO FALTANTE:</h3>
-      <h3>DINERO EXEDENTE:</h3>
+      <h3>DINERO EXCEDENTE:</h3>
     </div>
+
     <script>
-    var nombreElement = document.getElementById("nombre_id").textContent = nombre;
+      document.addEventListener("DOMContentLoaded", function () {
+        const params = new URLSearchParams(window.location.search);
+
+        const nombre = params.get("nombre") || "---";
+        const generado = params.get("Generado") || "---";
+        const desde = params.get("desde") || "---";
+        const cuadro = params.get("cuadro") || "---";
+        const faltante = params.get("faltante") || "---";
+        const faltantecalculado = params.get("faltantecalculado") || "---";
+        const excedente = params.get("excedente") || "---";
+        const excedentecalculado = params.get("excedentecalculado") || "---";
+        const cajaapp = params.get("cajaapp") || "---";
+        const selctinsumos = params.get("selctinsumos") || "---";
+
+        document.getElementById("nombre_id").textContent += " " + nombre;
+        document.getElementById("generado_id").textContent += " " + generado;
+        document.getElementById("desde_id").textContent += " " + desde;
+        document.getElementById("cuadro_id").textContent += " " + cuadro;
+        document.getElementById("faltante_id").textContent += " " + faltante;
+        document.getElementById("faltantecalculado_id").textContent +=
+          " " + faltantecalculado;
+        document.getElementById("excedente_id").textContent += " " + excedente;
+        document.getElementById("excedentecalculado_id").textContent +=
+          " " + excedentecalculado;
+        document.getElementById("cajaapp_id").textContent += " " + cajaapp;
+        document.getElementById("selctinsumos_id").textContent +=
+          " " + selctinsumos;
+      });
     </script>
   </body>
 </html>
