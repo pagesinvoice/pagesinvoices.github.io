@@ -52,11 +52,33 @@
     </style>
   </head>
   <body>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      // Obtener los valores de los parámetros
+      var nombre = params.has("nombre") ? params.get("nombre") : "---";
+      var desde = params.has("desde") ? params.get("desde") : "---";
+      var Generado = params.has("Generado") ? params.get("Generado") : "---";
+      var cuadro = params.has("cuadro") ? params.get("cuadro") : "---";
+      var faltante = params.has("faltante") ? params.get("faltante") : "---";
+      var faltantecalculado = params.has("faltantecalculado")
+        ? params.get("faltantecalculado")
+        : "---";
+      var excedentecalculado = params.has("excedentecalculado")
+        ? params.get("excedentecalculado")
+        : "---";
+      var cajaapp = params.has("cajaapp") ? params.get("cajaapp") : "---";
+
+      var selctinsumos = params.has("selctinsumos")
+        ? params.get("selctinsumos")
+        : "---";
+
+      selctinsumos = selctinsumos.split(",");
+    </script>
     <h1>REPORTE DE CIERRE CAJA</h1>
 
     <div class="info-block">
-      <p><strong>Nombre:</strong> Jhonnier Mejia</p>
-      <p><strong>Generado:</strong> 7/06/2024 1:23:09 p. m.</p>
+      <p id="Nombre_id"><strong>Nombre:</strong></p>
+      <p id="Generado"><strong>Generado:</strong> 7/06/2024 1:23:09 am.</p>
       <p><strong>Desde:</strong> 6/06/2024 , 11:33 a. m.</p>
       <p><strong>Hasta:</strong> 6/06/2024 , 11:33 a. m.</p>
       <p><strong>¿Cuadro Caja?:</strong> NO SE AH REVISADO</p>
@@ -174,5 +196,9 @@
       <h3>DINERO FALTANTE:</h3>
       <h3>DINERO EXEDENTE:</h3>
     </div>
+    <script>
+      var nombreElement = (document.getElementById("Nombre_id").textContent =
+        Nombre);
+    </script>
   </body>
 </html>
