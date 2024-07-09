@@ -13,7 +13,9 @@
         margin: 0 auto;
         padding: 20px;
       }
-      h1 {
+      h1,
+      h2,
+      h3 {
         color: #2c3e50;
         text-align: center;
       }
@@ -52,105 +54,109 @@
     </style>
   </head>
   <body>
-    <h1>REPORTE DE CIERRE CAJA</h1>
+    <h1 id="titulo-reporte">REPORTE DE CIERRE CAJA</h1>
 
     <div class="info-block">
-      <p id="nombre_id"><strong>Nombre:</strong></p>
-      <p id="generado_id"><strong>Generado:</strong></p>
-      <p id="desde_id"><strong>Desde:</strong></p>
-      <p id="cuadro_id"><strong>¿Cuadro Caja?:</strong></p>
-      <p id="faltante_id"><strong>Valor Faltante:</strong></p>
-      <p id="faltantecalculado_id">
-        <strong>Valor Faltante calculado:</strong>
+      <p id="nombre"><strong>Nombre:</strong></p>
+      <p id="fecha-generacion"><strong>Generado:</strong></p>
+      <p id="fecha-inicio"><strong>Desde:</strong></p>
+      <p id="fecha-fin"><strong>Hasta:</strong></p>
+      <p id="estado-caja"><strong>¿Cuadro Caja?:</strong></p>
+      <p id="valor-faltante"><strong>Valor Faltante:</strong></p>
+      <p id="valor-faltante-calculado">
+        <strong>Valor Faltante Calculado:</strong>
       </p>
-      <p id="excedente_id"><strong>Valor Excedente:</strong></p>
-      <p id="excedentecalculado_id">
-        <strong>Valor Excedente calculado:</strong>
+      <p id="valor-excedente"><strong>Valor Excedente:</strong></p>
+      <p id="valor-excedente-calculado">
+        <strong>Valor Excedente Calculado:</strong>
       </p>
-      <p id="cajaapp_id"><strong>Total de efectivo en caja - app:</strong></p>
-      <p id="selctinsumos_id"><strong>Selct Insumos:</strong></p>
+      <p id="efectivo-apertura-cierre">
+        <strong>Efectivo de Apertura y Cierre:</strong>
+      </p>
     </div>
 
     <table>
       <tr>
-        <th>NOMBRES</th>
-        <th>Apertura Cant 12 Onz licor</th>
-        <th>Cierre Cant 12 Onz licor</th>
-        <th>Apertura Cant 12 Onz sin licor</th>
-        <th>Cierre Cant 12 Onz sin licor</th>
-        <th>Apertura Cant 12 Onz cremoso</th>
-        <th>Cierre Cant 12 Onz cremoso</th>
-        <th>Apertura Cant 24 Onz</th>
-        <th>Cierre Cant 24 Onz</th>
+        <th id="col-nombres">NOMBRES</th>
+        <th id="col-ap-12-licor">Apertura Cant 12 Onz licor</th>
+        <th id="col-ci-12-licor">Cierre Cant 12 Onz licor</th>
+        <th id="col-ap-12-sin">Apertura Cant 12 Onz sin licor</th>
+        <th id="col-ci-12-sin">Cierre Cant 12 Onz sin licor</th>
+        <th id="col-ap-12-crem">Apertura Cant 12 Onz cremoso</th>
+        <th id="col-ci-12-crem">Cierre Cant 12 Onz cremoso</th>
+        <th id="col-ap-24">Apertura Cant 24 Onz</th>
+        <th id="col-ci-24">Cierre Cant 24 Onz</th>
       </tr>
       <tr>
-        <td>CANTIDADES</td>
-        <td>39</td>
-        <td>33</td>
-        <td>38</td>
-        <td>22</td>
-        <td>0</td>
-        <td>0</td>
-        <td>8</td>
-        <td>8</td>
+        <td id="row-cantidades">CANTIDADES</td>
+        <td id="cant-ap-12-licor"></td>
+        <td id="cant-ci-12-licor"></td>
+        <td id="cant-ap-12-sin"></td>
+        <td id="cant-ci-12-sin"></td>
+        <td id="cant-ap-12-crem"></td>
+        <td id="cant-ci-12-crem"></td>
+        <td id="cant-ap-24"></td>
+        <td id="cant-ci-24"></td>
       </tr>
       <tr>
-        <td>DIFERENCIA</td>
-        <td colspan="2">6</td>
-        <td colspan="2">16</td>
-        <td colspan="2">0</td>
-        <td colspan="2">0</td>
+        <td id="row-diferencia">DIFERENCIA</td>
+        <td id="dif-12-licor" colspan="2"></td>
+        <td id="dif-12-sin" colspan="2"></td>
+        <td id="dif-12-crem" colspan="2"></td>
+        <td id="dif-24" colspan="2"></td>
       </tr>
     </table>
 
     <div class="totals">
-      <p>Total 12 Onz: 77</p>
-      <p>Total 24 Onz: 8</p>
-      <p>Generado entre las fechas (Total de efectivo en caja): $ 184.000,00</p>
+      <p id="total-12-onz">Total 12 Onz:</p>
+      <p id="total-24-onz">Total 24 Onz:</p>
+      <p id="total-efectivo-caja">
+        Generado entre las fechas (Total de efectivo en caja):
+      </p>
     </div>
 
-    <h2>TOTAL DE VENTAS: $ 200.000</h2>
+    <h2 id="total-ventas">TOTAL DE VENTAS:</h2>
 
     <table>
       <tr>
-        <th>CONCEPTO</th>
-        <th>VALOR</th>
+        <th id="col-concepto">CONCEPTO</th>
+        <th id="col-valor">VALOR</th>
       </tr>
       <tr>
-        <td>Efectivo Recibido:</td>
-        <td>$ 184.000</td>
+        <td id="efectivo-recibido">Efectivo Recibido:</td>
+        <td id="valor-efectivo"></td>
       </tr>
       <tr>
-        <td>Transferencias:</td>
-        <td>$ 16.000</td>
+        <td id="transferencias">Transferencias:</td>
+        <td id="valor-transferencias"></td>
       </tr>
       <tr>
-        <td>Tarjeta:</td>
-        <td>$ 0</td>
+        <td id="tarjeta">Tarjeta:</td>
+        <td id="valor-tarjeta"></td>
       </tr>
       <tr>
-        <td>Número de Ordenes Repartidas:</td>
-        <td>0</td>
+        <td id="ordenes-repartidas">Número de Ordenes Repartidas:</td>
+        <td id="num-ordenes"></td>
       </tr>
       <tr>
-        <td>Efectivo Repartido:</td>
-        <td>$ 0</td>
+        <td id="efectivo-repartido">Efectivo Repartido:</td>
+        <td id="valor-efectivo-repartido"></td>
       </tr>
       <tr>
-        <td>Transferencias Repartidas:</td>
-        <td>$ 0,00</td>
+        <td id="transferencias-repartidas">Transferencias Repartidas:</td>
+        <td id="valor-transferencias-repartidas"></td>
       </tr>
       <tr>
-        <td>Total de efectivo en caja - app:</td>
-        <td>$ </td>
+        <td id="total-efectivo-app">Total de efectivo en caja - app:</td>
+        <td id="valor-total-efectivo"></td>
       </tr>
       <tr>
-        <td>Total de Transferencias:</td>
-        <td>$ 16.000</td>
+        <td id="total-transferencias">Total de Transferencias:</td>
+        <td id="valor-total-transferencias"></td>
       </tr>
     </table>
 
-    <p class="warning">
+    <p id="advertencia" class="warning">
       Si el valor en ROJO es mayor que el VERDE quiere decir que hace falta
       efectivo en caja (posiblemente diste más cambio, o registraste algunas
       ventas como si te hubieran pagado en efectivo pero te las pagaron por
@@ -159,48 +165,86 @@
     </p>
 
     <div class="observation">
-      <h3>Observaciones:</h3>
-      <p>190.000 guardados en el cajón de la casa.</p>
-      <p>Préstamos 0</p>
-      <p>Sacamos 0</p>
-      <p>Nos prestó 2.000 jhon burguer.</p>
-      <p>0 vasos dañado con licor</p>
-      <p>0 vasos dañados sin licor</p>
+      <h3 id="titulo-observaciones">Observaciones:</h3>
+      <p id="obs-info"></p>
     </div>
 
     <div>
-      <h3>DINERO FALTANTE:</h3>
-      <h3>DINERO EXCEDENTE:</h3>
+      <h3 id="dinero-faltante">DINERO FALTANTE:</h3>
+      <h3 id="dinero-excedente">DINERO EXEDENTE:</h3>
     </div>
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        const params = new URLSearchParams(window.location.search);
+        var params = new URLSearchParams(window.location.search);
 
-        const nombre = params.get("nombre") || "---";
-        const generado = params.get("Generado") || "---";
-        const desde = params.get("desde") || "---";
-        const cuadro = params.get("cuadro") || "---";
-        const faltante = params.get("faltante") || "---";
-        const faltantecalculado = params.get("faltantecalculado") || "---";
-        const excedente = params.get("excedente") || "---";
-        const excedentecalculado = params.get("excedentecalculado") || "---";
-        const cajaapp = params.get("cajaapp") || "---";
-        const selctinsumos = params.get("selctinsumos") || "---";
+        function setElementContent(id, paramName) {
+          var element = document.getElementById(id);
+          if (element) {
+            element.textContent +=
+              " " + (params.has(paramName) ? params.get(paramName) : "---");
+          }
+        }
 
-        document.getElementById("nombre_id").textContent += " " + nombre;
-        document.getElementById("generado_id").textContent += " " + generado;
-        document.getElementById("desde_id").textContent += " " + desde;
-        document.getElementById("cuadro_id").textContent += " " + cuadro;
-        document.getElementById("faltante_id").textContent += " " + faltante;
-        document.getElementById("faltantecalculado_id").textContent +=
-          " " + faltantecalculado;
-        document.getElementById("excedente_id").textContent += " " + excedente;
-        document.getElementById("excedentecalculado_id").textContent +=
-          " " + excedentecalculado;
-        document.getElementById("cajaapp_id").textContent += " " + cajaapp;
-        document.getElementById("selctinsumos_id").textContent +=
-          " " + selctinsumos;
+        // Información general
+        setElementContent("nombre", "nombre");
+        setElementContent("fecha-generacion", "fechaGeneracion");
+        setElementContent("fecha-inicio", "fechaInicio");
+        setElementContent("fecha-fin", "fechaFin");
+        setElementContent("estado-caja", "estadoCaja");
+        setElementContent("valor-faltante", "valorFaltante");
+        setElementContent("valor-faltante-calculado", "valorFaltanteCalculado");
+        setElementContent("valor-excedente", "valorExcedente");
+        setElementContent(
+          "valor-excedente-calculado",
+          "valorExcedenteCalculado"
+        );
+        setElementContent("efectivo-apertura-cierre", "efectivoAperturaCierre");
+
+        // Cantidades
+        setElementContent("cant-ap-12-licor", "cantAp12Licor");
+        setElementContent("cant-ci-12-licor", "cantCi12Licor");
+        setElementContent("cant-ap-12-sin", "cantAp12Sin");
+        setElementContent("cant-ci-12-sin", "cantCi12Sin");
+        setElementContent("cant-ap-12-crem", "cantAp12Crem");
+        setElementContent("cant-ci-12-crem", "cantCi12Crem");
+        setElementContent("cant-ap-24", "cantAp24");
+        setElementContent("cant-ci-24", "cantCi24");
+
+        // Diferencias
+        setElementContent("dif-12-licor", "dif12Licor");
+        setElementContent("dif-12-sin", "dif12Sin");
+        setElementContent("dif-12-crem", "dif12Crem");
+        setElementContent("dif-24", "dif24");
+
+        // Totales
+        setElementContent("total-12-onz", "total12Onz");
+        setElementContent("total-24-onz", "total24Onz");
+        setElementContent("total-efectivo-caja", "totalEfectivoCaja");
+        setElementContent("total-ventas", "totalVentas");
+
+        // Valores de la tabla
+        setElementContent("valor-efectivo", "valorEfectivo");
+        setElementContent("valor-transferencias", "valorTransferencias");
+        setElementContent("valor-tarjeta", "valorTarjeta");
+        setElementContent("num-ordenes", "numOrdenes");
+        setElementContent("valor-efectivo-repartido", "valorEfectivoRepartido");
+        setElementContent(
+          "valor-transferencias-repartidas",
+          "valorTransferenciasRepartidas"
+        );
+        setElementContent("valor-total-efectivo", "valorTotalEfectivo");
+        setElementContent(
+          "valor-total-transferencias",
+          "valorTotalTransferencias"
+        );
+
+        // Observaciones
+        setElementContent("obs-info", "obsinfo");
+
+        // Dinero faltante y excedente
+        setElementContent("dinero-faltante", "dineroFaltante");
+        setElementContent("dinero-excedente", "dineroExcedente");
       });
     </script>
   </body>
