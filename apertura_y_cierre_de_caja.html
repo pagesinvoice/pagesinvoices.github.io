@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<htmlz lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -52,19 +52,19 @@
         padding: 8px;
         border-left: 3px solid #2c3e50;
       }
-      .warning {
-        color: #e74c3c;
+     
+      .valor-faltante, .totalcaja-app {
+        background-color: #ff6b6b;
+        color: white;
+        padding: 2px 5px;
+        border-radius: 3px;
         font-weight: bold;
       }
-      #valor-faltante,
-      #valor-faltante-calculado,
-      #valor-total-efectivo {
-        color: red;
-        font-weight: bold;
-      }
-      #valor-excedente,
-      #valor-excedente-calculado {
-        color: green;
+      .valor-excedente, .total-efectivo-caja {
+        background-color: #51cf66;
+        color: white;
+        padding: 2px 5px;
+        border-radius: 3px;
         font-weight: bold;
       }
       .dinero-info {
@@ -75,6 +75,7 @@
         text-align: left;
         margin: 3px 0;
       }
+
     </style>
   </head>
   <body>
@@ -86,16 +87,20 @@
       <p id="fecha-inicio"><strong>Desde:</strong></p>
       <p id="fecha-fin"><strong>Hasta:</strong></p>
       <p id="estado-caja"><strong>¿Cuadro Caja?:</strong></p>
-      <p id="valor-faltante"><strong>Valor Faltante:</strong></p>
-      <p id="valor-faltante-calculado">
-        <strong>Valor Faltante Calculado:</strong>
+
+      <p>
+        <span class="etiqueta valor-faltante">Valor Faltante:</span> <span id="valor-faltante" class="valor-faltante"></span>
+        <span class="etiqueta valor-faltante">Valor Faltante Calculado:</span> <span id="valor-faltante-calculado" class="valor-faltante"></span>
       </p>
-      <p id="valor-excedente"><strong>Valor Excedente:</strong></p>
-      <p id="valor-excedente-calculado">
-        <strong>Valor Excedente Calculado:</strong>
+      <p>
+        <span class="etiqueta valor-excedente">Valor Excedente:</span> <span id="valor-excedente" class="valor-excedente"></span>
+        <span class="etiqueta valor-excedente">Valor Excedente Calculado:</span> <span id="valor-excedente-calculado" class="valor-excedente"></span>
       </p>
+      
+
       <p id="efectivo-apertura-cierre">
-        <strong>Efectivo de Cierre:</strong>
+        <strong>Efectivo de Apertura: </strong><span id="efectivo-apertura"></span>
+        <strong>Efectivo de Cierre: </strong><span id="efectivo-cierre"></span>
       </p>
     </div>
     <!-- Nueva tabla de productos y cantidades -->
@@ -142,7 +147,7 @@
     <div class="totals">
       <p id="total-12-onz">Total 12 Onz:</p>
       <p id="total-24-onz">Total 24 Onz:</p>
-      <p id="total-efectivo-caja">
+      <p class="total-efectivo-caja" id="total-efectivo-caja">
         Generado entre las fechas (Total de efectivo en caja):
       </p>
     </div>
@@ -178,7 +183,7 @@
         <td>Transferencias Repartidas:</td>
         <td id="valor-transferencias-repartidas"></td>
       </tr>
-      <tr>
+      <tr class="totalcaja-app">
         <td>Total de efectivo en caja - app:</td>
         <td id="valor-total-efectivo"></td>
       </tr>
@@ -189,7 +194,7 @@
     </table>
 
     <p id="advertencia" class="warning">
-      Si el valor en ROJO es mayor que el VERDE quiere decir que hace falta
+      NOTA: Si el valor en ROJO es mayor que el VERDE quiere decir que hace falta
       efectivo en caja (posiblemente diste más cambio, o registraste algunas
       ventas como si te hubieran pagado en efectivo pero te las pagaron por
       transferencias u otros medios revisar bien.) así mismo con el total de
@@ -197,23 +202,28 @@
     </p>
 
     <div class="observation">
-      <h3 id="titulo-observaciones">Observaciones:</h3>
+      <h3 id="titulo-observaciones">OBSERVACIONES:</h3>
       <p id="obs-info"></p>
-    </div>
-
-    <div class="dinero-info">
-      <h3 id="dinero-faltante">DINERO FALTANTE:</h3>
-      <h3 id="dinero-excedente">DINERO EXEDENTE:</h3>
     </div>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         var params = new URLSearchParams(window.location.search);
 
-        function setElementContent(id, paramName) {
+        function formatPrice(price) {
+        return '$' + parseFloat(price).toLocaleString('es-CO', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        }).replace(/,/g, '.');
+      }
+
+        function setElementContent(id, paramName, isPrice = false) {
           var element = document.getElementById(id);
           if (element) {
-            element.textContent +=
-              " " + (params.has(paramName) ? params.get(paramName) : "---");
+            var value = params.has(paramName) ? params.get(paramName) : "---";
+            if (isPrice && value !== "---") {
+              value = formatPrice(value);
+            }
+            element.textContent += " " + value;
           }
         }
 
@@ -223,14 +233,12 @@
         setElementContent("fecha-inicio", "fechaInicio");
         setElementContent("fecha-fin", "fechaFin");
         setElementContent("estado-caja", "estadoCaja");
-        setElementContent("valor-faltante", "valorFaltante");
-        setElementContent("valor-faltante-calculado", "valorFaltanteCalculado");
-        setElementContent("valor-excedente", "valorExcedente");
-        setElementContent(
-          "valor-excedente-calculado",
-          "valorExcedenteCalculado"
-        );
-        setElementContent("efectivo-apertura-cierre", "efectivoAperturaCierre");
+        setElementContent("valor-faltante", "valorFaltante", true);
+        setElementContent("valor-faltante-calculado", "valorFaltanteCalculado", true);
+        setElementContent("valor-excedente", "valorExcedente", true);
+        setElementContent("valor-excedente-calculado", "valorExcedenteCalculado", true);
+        setElementContent("efectivo-apertura", "efectivoApertura", true);
+        setElementContent("efectivo-cierre", "efectivoCierre", true);
 
         // Cantidades
         setElementContent("cant-ap-12-licor", "cantAp12Licor");
@@ -251,31 +259,25 @@
         // Totales
         setElementContent("total-12-onz", "total12Onz");
         setElementContent("total-24-onz", "total24Onz");
-        setElementContent("total-efectivo-caja", "totalEfectivoCaja");
-        setElementContent("total-ventas", "totalVentas");
+        setElementContent("total-efectivo-caja", "totalEfectivoCaja", true);
+        setElementContent("total-ventas", "totalVentas", true);
 
         // Valores de la tabla
-        setElementContent("valor-efectivo", "valorEfectivo");
-        setElementContent("valor-transferencias", "valorTransferencias");
-        setElementContent("valor-tarjeta", "valorTarjeta");
+        setElementContent("valor-efectivo", "valorEfectivo", true);
+        setElementContent("valor-transferencias", "valorTransferencias", true);
+        setElementContent("valor-tarjeta", "valorTarjeta", true);
         setElementContent("num-ordenes", "numOrdenes");
-        setElementContent("valor-efectivo-repartido", "valorEfectivoRepartido");
-        setElementContent(
-          "valor-transferencias-repartidas",
-          "valorTransferenciasRepartidas"
-        );
-        setElementContent("valor-total-efectivo", "valorTotalEfectivo");
-        setElementContent(
-          "valor-total-transferencias",
-          "valorTotalTransferencias"
-        );
+        setElementContent("valor-efectivo-repartido", "valorEfectivoRepartido", true);
+        setElementContent("valor-transferencias-repartidas", "valorTransferenciasRepartidas", true);
+        setElementContent("valor-total-efectivo", "valorTotalEfectivo", true);
+        setElementContent("valor-total-transferencias", "valorTotalTransferencias", true);
 
         // Observaciones
         setElementContent("obs-info", "obsinfo");
 
         // Dinero faltante y excedente
-        setElementContent("dinero-faltante", "dineroFaltante");
-        setElementContent("dinero-excedente", "dineroExcedente");
+        setElementContent("dinero-faltante", "dineroFaltante", true);
+        setElementContent("dinero-excedente", "dineroExcedente", true);
 
         // Productos y cantidades vendidas
         var nombresProductos = params.get("nombreProducto").split(",");
@@ -351,4 +353,4 @@
       });
     </script>
   </body>
-</html>
+</htmlz
