@@ -31,129 +31,140 @@
     </div>
 
     <script>
-      function getUrlParameter(name) {
-        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-        var results = regex.exec(location.search);
-        return results === null
-          ? ""
-          : decodeURIComponent(results[1].replace(/\+/g, " "));
-      }
+      document.addEventListener("DOMContentLoaded", function () {
+        var params = new URLSearchParams(window.location.search);
 
-      function aggregateData(labels, data) {
-        const aggregated = {};
-        labels.forEach((label, index) => {
-          if (aggregated[label]) {
-            aggregated[label] += parseFloat(data[index]) || 0;
-          } else {
-            aggregated[label] = parseFloat(data[index]) || 0;
+        function formatPrice(price) {
+          return (
+            "$" +
+            parseFloat(price)
+              .toLocaleString("es-CO", {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })
+              .replace(/,/g, ".")
+          );
+        }
+
+        function getParamValue(paramName, isPrice = false) {
+          var value = params.has(paramName) ? params.get(paramName) : "";
+          if (isPrice && value !== "") {
+            value = formatPrice(value);
           }
+          return value;
+        }
+
+        function aggregateData(labels, data) {
+          const aggregated = {};
+          labels.forEach((label, index) => {
+            if (aggregated[label]) {
+              aggregated[label] += parseFloat(data[index]) || 0;
+            } else {
+              aggregated[label] = parseFloat(data[index]) || 0;
+            }
+          });
+          return Object.entries(aggregated).map(([date, value]) => ({
+            date,
+            value,
+          }));
+        }
+
+        const labels = getParamValue("label1")
+          .split(",")
+          .map((l) => l.trim());
+        const data = getParamValue("data1")
+          .split(",")
+          .map((d) => d.trim());
+
+        const aggregatedData = aggregateData(labels, data);
+        aggregatedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        const ctx = document.getElementById("myChart").getContext("2d");
+        new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: aggregatedData.map((item) => item.date),
+            datasets: [
+              {
+                label: "Total",
+                data: aggregatedData.map((item) => item.value),
+                backgroundColor: "rgba(54, 162, 235, 0.5)",
+                borderColor: "rgb(54, 162, 235)",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              title: {
+                display: true,
+                text: "Gráfico de Ventas",
+                font: {
+                  size: 18,
+                },
+              },
+              legend: {
+                display: true,
+                position: "top",
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    return `Total: ${formatPrice(context.parsed.y)}`;
+                  },
+                },
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  callback: function (value) {
+                    return formatPrice(value);
+                  },
+                },
+              },
+            },
+            animation: {
+              onComplete: function (animation) {
+                const chartInstance = animation.chart;
+                const ctx = chartInstance.ctx;
+                const meta = chartInstance.getDatasetMeta(0);
+
+                meta.data.forEach(function (bar, index) {
+                  const data = formatPrice(
+                    chartInstance.data.datasets[0].data[index]
+                  );
+
+                  ctx.font = Chart.helpers.fontString(
+                    Chart.defaults.font.size,
+                    "bold",
+                    Chart.defaults.font.family
+                  );
+                  const textWidth = ctx.measureText(data).width;
+
+                  const boxWidth = textWidth + 10;
+                  const boxHeight = 20;
+                  const boxX = bar.x - boxWidth / 2;
+                  const boxY = bar.y + bar.height / 2 - boxHeight / 2;
+
+                  ctx.fillStyle = "white";
+                  ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
+
+                  ctx.strokeStyle = "rgba(0, 0, 0, 0.1)";
+                  ctx.lineWidth = 1;
+                  ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+
+                  ctx.fillStyle = "#000";
+                  ctx.textAlign = "center";
+                  ctx.textBaseline = "middle";
+                  ctx.fillText(data, bar.x, boxY + boxHeight / 2);
+                });
+              },
+            },
+          },
         });
-        return Object.entries(aggregated).map(([date, value]) => ({
-          date,
-          value,
-        }));
-      }
-
-      const labels = getUrlParameter("label1")
-        .split(",")
-        .map((l) => l.trim());
-      const data = getUrlParameter("data1")
-        .split(",")
-        .map((d) => d.trim());
-
-      const aggregatedData = aggregateData(labels, data);
-      aggregatedData.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-      const ctx = document.getElementById("myChart").getContext("2d");
-      new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: aggregatedData.map((item) => item.date),
-          datasets: [
-            {
-              label: "Total",
-              data: aggregatedData.map((item) => item.value),
-              backgroundColor: "rgba(54, 162, 235, 0.5)",
-              borderColor: "rgb(54, 162, 235)",
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            title: {
-              display: true,
-              text: "Gráfico de Ventas",
-              font: {
-                size: 18,
-              },
-            },
-            legend: {
-              display: true,
-              position: "top",
-            },
-            tooltip: {
-              callbacks: {
-                label: function (context) {
-                  return `Total: ${context.parsed.y.toLocaleString()}`;
-                },
-              },
-            },
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                callback: function (value) {
-                  return value.toLocaleString();
-                },
-              },
-            },
-          },
-          animation: {
-            onComplete: function (animation) {
-              const chartInstance = animation.chart;
-              const ctx = chartInstance.ctx;
-              const meta = chartInstance.getDatasetMeta(0);
-
-              meta.data.forEach(function (bar, index) {
-                const data =
-                  chartInstance.data.datasets[0].data[index].toLocaleString();
-
-                // Measure text width
-                ctx.font = Chart.helpers.fontString(
-                  Chart.defaults.font.size,
-                  "bold",
-                  Chart.defaults.font.family
-                );
-                const textWidth = ctx.measureText(data).width;
-
-                // Calculate position for centered box
-                const boxWidth = textWidth + 10;
-                const boxHeight = 20;
-                const boxX = bar.x - boxWidth / 2;
-                const boxY = bar.y + bar.height / 2 - boxHeight / 2;
-
-                // Draw white box
-                ctx.fillStyle = "white";
-                ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
-
-                // Draw border around white box
-                ctx.strokeStyle = "rgba(0, 0, 0, 0.1)";
-                ctx.lineWidth = 1;
-                ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
-
-                // Draw text
-                ctx.fillStyle = "#000";
-                ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
-                ctx.fillText(data, bar.x, boxY + boxHeight / 2);
-              });
-            },
-          },
-        },
       });
     </script>
   </body>
