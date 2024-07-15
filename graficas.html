@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,10 +9,9 @@
       body {
         font-family: Arial, sans-serif;
         display: flex;
-        flex-direction: column;
         justify-content: center;
         align-items: center;
-        min-height: 100vh;
+        height: 100vh;
         margin: 0;
         background-color: #f0f0f0;
       }
@@ -24,36 +23,23 @@
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       }
-      #input-container {
-        width: 80%;
-        max-width: 800px;
-        margin-top: 20px;
-      }
-      textarea {
-        width: 100%;
-        height: 100px;
-        margin-bottom: 10px;
-      }
-      #url-display {
-        margin-top: 20px;
-        width: 80%;
-        max-width: 800px;
-        word-wrap: break-word;
-      }
     </style>
   </head>
   <body>
     <div id="chart-container">
       <canvas id="myChart"></canvas>
     </div>
-    <div id="input-container">
-      <textarea id="labels-input" placeholder="Etiquetas (separadas por comas)"></textarea>
-      <textarea id="data-input" placeholder="Datos (separados por comas)"></textarea>
-      <button onclick="generateChart()">Generar Gráfico</button>
-    </div>
-    <div id="url-display"></div>
 
     <script>
+      function getUrlParameter(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+        var results = regex.exec(location.search);
+        return results === null
+          ? ""
+          : decodeURIComponent(results[1].replace(/\+/g, " "));
+      }
+
       function aggregateData(labels, data) {
         const aggregated = {};
         labels.forEach((label, index) => {
@@ -69,147 +55,106 @@
         }));
       }
 
-      function createChart(labels, data) {
-        const aggregatedData = aggregateData(labels, data);
-        aggregatedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+      const labels = getUrlParameter("label1")
+        .split(",")
+        .map((l) => l.trim());
+      const data = getUrlParameter("data1")
+        .split(",")
+        .map((d) => d.trim());
 
-        const ctx = document.getElementById("myChart").getContext("2d");
-        new Chart(ctx, {
-          type: "bar",
-          data: {
-            labels: aggregatedData.map((item) => item.date),
-            datasets: [
-              {
-                label: "Total",
-                data: aggregatedData.map((item) => item.value),
-                backgroundColor: "rgba(54, 162, 235, 0.5)",
-                borderColor: "rgb(54, 162, 235)",
-                borderWidth: 1,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              title: {
-                display: true,
-                text: "Gráfico de Ventas",
-                font: {
-                  size: 18,
-                },
-              },
-              legend: {
-                display: true,
-                position: "top",
-              },
-              tooltip: {
-                callbacks: {
-                  label: function (context) {
-                    return `Total: ${context.parsed.y.toLocaleString()}`;
-                  },
-                },
+      const aggregatedData = aggregateData(labels, data);
+      aggregatedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      const ctx = document.getElementById("myChart").getContext("2d");
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: aggregatedData.map((item) => item.date),
+          datasets: [
+            {
+              label: "Total",
+              data: aggregatedData.map((item) => item.value),
+              backgroundColor: "rgba(54, 162, 235, 0.5)",
+              borderColor: "rgb(54, 162, 235)",
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: {
+              display: true,
+              text: "Gráfico de Ventas",
+              font: {
+                size: 18,
               },
             },
-            scales: {
-              y: {
-                beginAtZero: true,
-                ticks: {
-                  callback: function (value) {
-                    return value.toLocaleString();
-                  },
-                },
-              },
+            legend: {
+              display: true,
+              position: "top",
             },
-            animation: {
-              onComplete: function (animation) {
-                const chartInstance = animation.chart;
-                const ctx = chartInstance.ctx;
-                const meta = chartInstance.getDatasetMeta(0);
-
-                meta.data.forEach(function (bar, index) {
-                  const data = chartInstance.data.datasets[0].data[index].toLocaleString();
-
-                  ctx.font = Chart.helpers.fontString(
-                    Chart.defaults.font.size,
-                    "bold",
-                    Chart.defaults.font.family
-                  );
-                  const textWidth = ctx.measureText(data).width;
-
-                  const boxWidth = textWidth + 10;
-                  const boxHeight = 20;
-                  const boxX = bar.x - boxWidth / 2;
-                  const boxY = bar.y + bar.height / 2 - boxHeight / 2;
-
-                  ctx.fillStyle = "white";
-                  ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
-
-                  ctx.strokeStyle = "rgba(0, 0, 0, 0.1)";
-                  ctx.lineWidth = 1;
-                  ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
-
-                  ctx.fillStyle = "#000";
-                  ctx.textAlign = "center";
-                  ctx.textBaseline = "middle";
-                  ctx.fillText(data, bar.x, boxY + boxHeight / 2);
-                });
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  return `Total: ${context.parsed.y.toLocaleString()}`;
+                },
               },
             },
           },
-        });
-      }
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function (value) {
+                  return value.toLocaleString();
+                },
+              },
+            },
+          },
+          animation: {
+            onComplete: function (animation) {
+              const chartInstance = animation.chart;
+              const ctx = chartInstance.ctx;
+              const meta = chartInstance.getDatasetMeta(0);
 
-      function generateChartId() {
-        return Math.random().toString(36).substr(2, 9);
-      }
+              meta.data.forEach(function (bar, index) {
+                const data =
+                  chartInstance.data.datasets[0].data[index].toLocaleString();
 
-      function saveChartData(labels, data) {
-        const chartId = generateChartId();
-        const chartData = { labels, data };
-        localStorage.setItem(chartId, JSON.stringify(chartData));
-        return chartId;
-      }
+                // Measure text width
+                ctx.font = Chart.helpers.fontString(
+                  Chart.defaults.font.size,
+                  "bold",
+                  Chart.defaults.font.family
+                );
+                const textWidth = ctx.measureText(data).width;
 
-      function loadChartData(chartId) {
-        const chartData = JSON.parse(localStorage.getItem(chartId));
-        return chartData;
-      }
+                // Calculate position for centered box
+                const boxWidth = textWidth + 10;
+                const boxHeight = 20;
+                const boxX = bar.x - boxWidth / 2;
+                const boxY = bar.y + bar.height / 2 - boxHeight / 2;
 
-      function generateChartUrl(chartId) {
-        const baseUrl = window.location.href.split('?')[0];
-        return `${baseUrl}?chart=${chartId}`;
-      }
+                // Draw white box
+                ctx.fillStyle = "white";
+                ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
 
-      function generateChart() {
-        const labels = document.getElementById('labels-input').value.split(',').map(l => l.trim());
-        const data = document.getElementById('data-input').value.split(',').map(d => d.trim());
-        
-        if (labels.length > 0 && data.length > 0) {
-          const chartId = saveChartData(labels, data);
-          const url = generateChartUrl(chartId);
-          createChart(labels, data);
-          document.getElementById('url-display').textContent = `URL del gráfico: ${url}`;
-        } else {
-          alert('Por favor, ingrese etiquetas y datos válidos.');
-        }
-      }
+                // Draw border around white box
+                ctx.strokeStyle = "rgba(0, 0, 0, 0.1)";
+                ctx.lineWidth = 1;
+                ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
 
-      function init() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const chartId = urlParams.get('chart');
-
-        if (chartId) {
-          const chartData = loadChartData(chartId);
-          if (chartData) {
-            createChart(chartData.labels, chartData.data);
-            document.getElementById('url-display').textContent = `URL del gráfico: ${window.location.href}`;
-          } else {
-            alert('No se encontró el gráfico solicitado.');
-          }
-        }
-      }
-
-      init();
+                // Draw text
+                ctx.fillStyle = "#000";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(data, bar.x, boxY + boxHeight / 2);
+              });
+            },
+          },
+        },
+      });
     </script>
   </body>
 </html>
