@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="es" class="dark-theme">
+  <head>
+    <base target="_top" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cocktails</title>
+    <style>
+      :root {
+        --background-color: #f4f4f4;
+        --text-color: #333;
+        --card-background: #fff;
+        --header-background: #007bff;
+      }
+    
+      .dark-theme {
+        --background-color: #333;
+        --text-color: #f4f4f4;
+        --card-background: #444;
+        --header-background: #1a1a1a;
+      }
+    
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        transition: background-color 0.3s, color 0.3s;
+      }
+    
+      header {
+        background-color: var(--header-background);
+        color: white;
+        text-align: center;
+        padding: 20px 0;
+      }
+    
+      #logo {
+        max-width: 200px;
+      }
+    
+      #theme-toggle {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: #ffc107;
+        color: black;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    
+      .categoria-nav {
+        display: flex;
+        justify-content: center;
+        background-color: var(--header-background);
+        padding: 10px 0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+      }
+    
+      .categoria-nav::-webkit-scrollbar {
+        display: none;
+      }
+    
+      .categoria-nav button {
+        background-color: transparent;
+        border: none;
+        color: white;
+        padding: 10px 15px;
+        margin: 0 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        border-radius: 10px
+      }
+    
+      .categoria-nav button:hover,
+      .categoria-nav button.active {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+    
+      .categoria-section {
+        margin-bottom: 40px;
+      }
+    
+      .categoria-title {
+        text-align: center;
+        font-size: 24px;
+        margin: 20px 0;
+      }
+    
+      #productos-container {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 20px;
+        padding: 20px;
+        justify-content: flex-start;
+        align-items: stretch;
+        width: 100%;
+        box-sizing: border-box;
+      }
+    
+      .producto-card {
+        flex: 0 0 auto;
+        width: 100px;
+        background-color: var(--card-background);
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        text-align: center;
+        transition: transform 0.2s;
+        display: flex;
+        flex-direction: column;
+      }
+    
+      .producto-card:hover {
+        transform: scale(1.05);
+      }
+    
+    .producto-imagen {
+        width: 51%;
+        height: 172px;
+        object-fit: cover;
+        border-radius: 10px 10px 0 0;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+      .producto-nombre {
+        font-size: 1.2em;
+        margin: 10px 0;
+        flex-grow: 1;
+      }
+    
+      .producto-precio {
+        font-size: 1.1em;
+        color: #ff6347;
+        margin-bottom: 10px;
+      }
+    
+      .btn-agregar {
+        background-color: #ffc107;
+        color: black;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+    
+      .btn-agregar:hover {
+        background-color: #e0a800;
+      }
+    
+      #carrito-flotante {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #28a745;
+        color: white;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+    
+      .select-estilizado {
+        background-color: var(--card-background);
+        border: 2px solid #007bff;
+        border-radius: 5px;
+        padding: 10px 15px;
+        color: var(--text-color);
+        font-size: 1em;
+        cursor: pointer;
+        outline: none;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: border-color 0.3s, box-shadow 0.3s;
+      }
+    
+      .select-estilizado:focus {
+        border-color: #0056b3;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+    
+      .select-estilizado option {
+        background-color: var(--card-background);
+        color: var(--text-color);
+      }
+    
+      #carrito-contador {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    
+      .notificacion {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        display: none;
+      }
+    
+      #carrito-detalle {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: var(--card-background);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        z-index: 1001;
+        display: none;
+        width: 80%;
+        max-width: 600px;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+    
+      #carrito-detalle h2 {
+        margin-top: 0;
+        color: var(--text-color);
+      }
+    
+      #carrito-items {
+        margin-bottom: 20px;
+      }
+    
+      .carrito-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+      }
+    
+      .carrito-item-info {
+        flex-grow: 1;
+      }
+    
+      .carrito-item-acciones {
+        display: flex;
+        align-items: center;
+      }
+    
+      .btn-cantidad {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        margin: 0 5px;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+    
+      .btn-eliminar {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+    
+      .item-observacion {
+        margin-top: 5px;
+        font-size: 0.9em;
+        color: #666;
+      }
+    
+      #carrito-total {
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-top: 20px;
+        text-align: right;
+      }
+    
+      #tipo-entrega {
+        margin-top: 20px;
+      }
+    
+      #datos-cliente {
+        margin-top: 20px;
+      }
+    
+      #datos-cliente input {
+        width: 95%;
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: var(--card-background);
+        color: var(--text-color);
+      }
+    
+      #guardar-pedido {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+        width: 100%;
+      }
+    
+      #cerrar-carrito {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+    
+      #cerrar-carrito:hover {
+        background-color: #d32f2f;
+      }
+    
+      #sabor-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: var(--card-background);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        z-index: 1002;
+        display: none;
+        width: 80%;
+        max-width: 400px;
+        text-align: center;
+      }
+    
+      #sabor-popup h2 {
+        margin-top: 0;
+        color: var(--text-color);
+      }
+    
+      .cantidad-control {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 10px 0;
+      }
+    
+      .cantidad-control button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 0 5px;
+        transition: background-color 0.2s;
+      }
+    
+      .cantidad-control button:hover {
+        background-color: #0056b3;
+      }
+    
+      #cantidad {
+        font-size: 1.2em;
+        padding: 0 10px;
+      }
+    
+      #confirmar-sabor,
+      #cancelar-sabor {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 10px 5px;
+        transition: background-color 0.2s;
+      }
+    
+      #confirmar-sabor:hover {
+        background-color: #0056b3;
+      }
+    
+      #cancelar-sabor {
+        background-color: #dc3545;
+      }
+    
+      #cancelar-sabor:hover {
+        background-color: #c82333;
+      }
+    
+      #tipo-entrega {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+      }
+    
+      .btn-entrega {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin: 0 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+      }
+    
+      .btn-entrega:hover {
+        background-color: #45a049;
+      }
+    
+      .btn-entrega.active {
+        background-color: #357a38;
+      }
+    
+      @media (max-width: 600px) {
+        #productos-container {
+          flex-direction: column;
+          align-items: center;
+        }
+    
+        .producto-card {
+          width: 100%;
+          max-width: 300px;
+          margin-bottom: 20px;
+        }
+    
+        #carrito-detalle {
+          width: 95%;
+          max-height: 90vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img id="logo" src="./qhubomor_sinfondo.png" alt="Logo de Mi Cocktails">
+      <button id="theme-toggle">Claro</button>
+    </header>
+    <nav class="categoria-nav" id="categoria-nav"></nav>
+
+    <div id="productos-container"></div>
+
+    <div id="carrito-flotante">
+      🛒
+      <span id="carrito-contador">0</span>
+    </div>
+
+    <div id="notificacion" class="notificacion">Producto Agregado</div>
+
+    <div id="carrito-detalle">
+      <h2>Detalle del Carrito</h2>
+      <div id="carrito-items"></div>
+      <div id="carrito-total"></div>
+      <div id="tipo-entrega">
+        <button class="btn-entrega active" data-tipo="domicilio">
+          Domicilio
+        </button>
+        <button class="btn-entrega" data-tipo="recoger">Recoger</button>
+      </div>
+      <div id="datos-cliente">
+        <input type="text" id="nombre" placeholder="Nombre" required />
+        <input type="tel" id="telefono" placeholder="Teléfono" required />
+        <input type="text" id="direccion" placeholder="Dirección" required />
+        <input type="text" id="placa" placeholder="Placa (opcional)" />
+      </div>
+      <button id="guardar-pedido">Guardar Pedido</button>
+      <button id="cerrar-carrito">X</button>
+    </div>
+
+    <div id="sabor-popup">
+      <h2>Seleccionar Sabor:</h2>
+      <div class="select-container">
+        <select id="sabor-select" class="select-estilizado">
+          <option value="Chocolate">Chocolate</option>
+          <option value="Vainilla">Vainilla</option>
+        </select>
+      </div>
+      <div class="cantidad-control">
+        <button id="disminuir-cantidad">-</button>
+        <span id="cantidad">1</span>
+        <button id="aumentar-cantidad">+</button>
+      </div
+    </div>
+    <button id="confirmar-sabor">Agregar al Carrito</button>
+    <button id="cancelar-sabor">Cancelar</button>
+  </div>
+
+  <script>
+    let carrito = [];
+    let productoSeleccionado = null;
+    const productosContainer = document.getElementById("productos-container");
+    const carritoContador = document.getElementById("carrito-contador");
+    const notificacion = document.getElementById("notificacion");
+    const carritoDetalle = document.getElementById("carrito-detalle");
+    const carritoItems = document.getElementById("carrito-items");
+    const carritoTotal = document.getElementById("carrito-total");
+    const saborPopup = document.getElementById("sabor-popup");
+    const saborSelect = document.getElementById("sabor-select");
+    const cantidadElement = document.getElementById("cantidad");
+    const categoriaNav = document.getElementById("categoria-nav");
+  
+    let productos = [];
+  
+    // Función para obtener los productos de la API
+      // Función para obtener los productos de la API
+  async function obtenerProductos() {
+    const url = 'https://api.appsheet.com/api/v2/apps/703303a3-268c-4c29-82e9-735b5d28edc4/tables/PRODUCTOS/Action';
+    const headers = {
+      'ApplicationAccessKey': 'V2-7ox9f-3g8f2-3oL7r-NNLJz-23FyY-mhPEJ-s44e2-8i9QT',
+      'Content-Type': 'application/json'
+    };
+    const body = {
+      "Action": "Find",
+      "Properties": {
+        "Locale": "es-CO",
+        "Timezone": "America/Bogota"
+      },
+      "Rows": []
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(body)
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // Procesar los datos recibidos
+      productos = data
+        .filter(item => item.Mostrar === "si")  // Filtrar solo productos con Mostrar = "si"
+        .map(item => ({
+          id: item.IDproductos,
+          categoria: item.Categoria_Nombre,  // Usar Categoria_Nombre en lugar de Categoria
+          nombre: item.Nombre,
+          cantidad: item.Cantidad || 0,
+          precio: parseFloat(item["Precio Unitario"]),
+          imagen: "https://cdn-icons-png.flaticon.com/512/16696/16696570.png"
+        }));
+
+      // Obtener categorías únicas
+      const categorias = [...new Set(productos.map(producto => producto.categoria))];
+
+      // Crear botones de categoría
+      categoriaNav.innerHTML = '';
+      categorias.forEach(categoria => {
+        const button = document.createElement('button');
+        button.textContent = categoria;
+        button.addEventListener('click', () => filtrarProductos(categoria));
+        categoriaNav.appendChild(button);
+      });
+
+      // Mostrar productos de la primera categoría por defecto
+      if (categorias.length > 0) {
+        filtrarProductos(categorias[0]);
+      }
+    } catch (error) {
+      console.error('Error al obtener los productos:', error);
+    }
+  }
+  
+    // Llamar a la función para obtener los productos cuando se carga la página
+    window.addEventListener('load', obtenerProductos);
+  
+        // Función para filtrar productos por categoría
+    function filtrarProductos(categoria) {
+        const botonesCategoria = categoriaNav.querySelectorAll('button');
+        botonesCategoria.forEach(btn => {
+        if (btn.textContent === categoria) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+        });
+
+        productosContainer.innerHTML = '';
+        const productosFiltrados = productos.filter(p => p.categoria === categoria);
+        mostrarProductos(productosFiltrados);
+    }
+  
+    // Mostrar productos
+    function mostrarProductos(productosAMostrar) {
+      productosContainer.innerHTML = '';
+      productosAMostrar.forEach((producto) => {
+        const card = document.createElement("div");
+        card.className = "producto-card";
+        card.innerHTML = `
+          <img src="${producto.imagen}" alt="${producto.nombre}" class="producto-imagen">
+          <h3 class="producto-nombre">${producto.nombre}</h3>
+          <p class="producto-precio">$${producto.precio}</p>
+          <button class="btn-agregar" data-id="${producto.id}" data-categoria="${producto.categoria}">Añadir al carrito</button>
+        `;
+        productosContainer.appendChild(card);
+      });
+  
+      // Agregar event listeners a los botones
+      document.querySelectorAll(".btn-agregar").forEach((btn) => {
+        btn.addEventListener("click", iniciarAgregarAlCarrito);
+      });
+    }
+  
+    function iniciarAgregarAlCarrito(event) {
+      const productoId = event.target.dataset.id;
+      const categoria = event.target.dataset.categoria;
+  
+      productoSeleccionado = {
+        id: productoId,
+        categoria: categoria,
+      };
+  
+      mostrarSaborPopup();
+    }
+  
+    function mostrarSaborPopup() {
+      cantidadElement.textContent = "1";
+      saborPopup.style.display = "block";
+    }
+  
+    document.getElementById("confirmar-sabor").onclick = () => {
+      const saborSeleccionado = saborSelect.value;
+      const cantidad = parseInt(cantidadElement.textContent);
+      agregarAlCarrito(productoSeleccionado.id, saborSeleccionado, cantidad);
+      saborPopup.style.display = "none";
+    };
+  
+    document.getElementById("cancelar-sabor").onclick = () => {
+      saborPopup.style.display = "none";
+    };
+  
+    document.getElementById("disminuir-cantidad").onclick = () => {
+      let cantidad = parseInt(cantidadElement.textContent);
+      if (cantidad > 1) {
+        cantidadElement.textContent = cantidad - 1;
+      }
+    };
+  
+    document.getElementById("aumentar-cantidad").onclick = () => {
+      let cantidad = parseInt(cantidadElement.textContent);
+      cantidadElement.textContent = cantidad + 1;
+    };
+  
+    function agregarAlCarrito(productoId, sabor, cantidad) {
+      const producto = productos.find((p) => p.id === productoId);
+      const productoAgregado = {
+        ...producto,
+        sabor,
+        cantidad,
+        observacion: "",
+      };
+  
+      const itemExistente = carrito.find(
+        (item) =>
+          item.id === productoAgregado.id &&
+          item.sabor === productoAgregado.sabor
+      );
+      if (itemExistente) {
+        itemExistente.cantidad += productoAgregado.cantidad;
+      } else {
+        carrito.push(productoAgregado);
+      }
+  
+      actualizarCarrito();
+      mostrarNotificacion();
+    }
+  
+    function actualizarCarrito() {
+      carritoContador.textContent = carrito.reduce(
+        (total, item) => total + item.cantidad,
+        0
+      );
+      carritoItems.innerHTML = "";
+      let total = 0;
+  
+      carrito.forEach((item, index) => {
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "carrito-item";
+        itemDiv.innerHTML = `
+          <div class="carrito-item-info">
+            <strong>${item.nombre}</strong> ${item.sabor ? "(" + item.sabor + ")" : ""}<br>
+            $${item.precio} x ${item.cantidad} = $${(item.precio * item.cantidad)}
+            <div class="item-observacion">${item.observacion ? "Observación: " + item.observacion : ""}</div>
+          </div>
+          <div class="carrito-item-acciones">
+            <button class="btn-cantidad" onclick="cambiarCantidad(${index}, -1)">-</button>
+            <span>${item.cantidad}</span>
+            <button class="btn-cantidad" onclick="cambiarCantidad(${index}, 1)">+</button>
+            <button class="btn-eliminar" onclick="eliminarItem(${index})">Eliminar</button>
+          </div>
+        `;
+        carritoItems.appendChild(itemDiv);
+  
+        const observacionInput = document.createElement("input");
+        observacionInput.type = "text";
+        observacionInput.placeholder = "Agregar observación";
+        observacionInput.value = item.observacion;
+        observacionInput.onchange = (e) => agregarObservacion(index, e.target.value);
+        itemDiv.appendChild(observacionInput);
+  
+        total += item.cantidad * item.precio;
+      });
+  
+      carritoTotal.textContent = `Total: $${total}`;
+    }
+  
+    function cambiarCantidad(index, cambio) {
+      carrito[index].cantidad += cambio;
+      if (carrito[index].cantidad <= 0) {
+        carrito.splice(index, 1);
+      }
+      actualizarCarrito();
+    }
+  
+    function eliminarItem(index) {
+      carrito.splice(index, 1);
+      actualizarCarrito();
+    }
+  
+    function agregarObservacion(index, observacion) {
+      carrito[index].observacion = observacion;
+      actualizarCarrito();
+    }
+  
+    function mostrarNotificacion() {
+      notificacion.style.display = "block";
+      setTimeout(() => {
+        notificacion.style.display = "none";
+      }, 2000);
+    }
+  
+    document.getElementById("carrito-flotante").onclick = () => {
+      carritoDetalle.style.display = "block";
+    };
+  
+    document.getElementById("cerrar-carrito").onclick = () => {
+      carritoDetalle.style.display = "none";
+    };
+  
+    const botonesEntrega = document.querySelectorAll(".btn-entrega");
+    const direccionInput = document.getElementById("direccion");
+    const placaInput = document.getElementById("placa");
+  
+    botonesEntrega.forEach((boton) => {
+      boton.addEventListener("click", (event) => {
+        botonesEntrega.forEach((b) => b.classList.remove("active"));
+        event.target.classList.add("active");
+  
+        const tipoEntrega = event.target.dataset.tipo;
+        if (tipoEntrega === "domicilio") {
+          direccionInput.style.display = "block";
+          direccionInput.required = true;
+          placaInput.style.display = "none";
+          placaInput.required = false;
+        } else {
+          direccionInput.style.display = "none";
+          direccionInput.required = false;
+          placaInput.style.display = "block";
+          placaInput.required = false;
+        }
+      });
+    });
+  
+    // Guardar pedido
+    document.getElementById("guardar-pedido").onclick = () => {
+      const nombre = document.getElementById("nombre").value;
+      const telefono = document.getElementById("telefono").value;
+      const tipoEntrega = document.querySelector(".btn-entrega.active").dataset.tipo;
+      const direccion = document.getElementById("direccion").value;
+      const placa = document.getElementById("placa").value;
+  
+      if (!nombre || !telefono || (tipoEntrega === "domicilio" && !direccion)) {
+        alert("Por favor, complete todos los campos obligatorios.");
+        return;
+      }
+  
+      const pedido = {
+        items: carrito,
+        cliente: {
+          nombre,
+          telefono,
+          tipoEntrega,
+          direccion: tipoEntrega === "domicilio" ? direccion : "",
+          placa: tipoEntrega === "recoger" ? placa : "",
+        },
+        total: carrito.reduce((total, item) => total + item.cantidad * item.precio, 0),
+      };
+  
+      console.log("Pedido guardado:", pedido);
+      // Aquí puedes enviar el pedido a tu servidor o realizar otras acciones necesarias
+      alert("Pedido guardado con éxito!");
+      carrito = [];
+      actualizarCarrito();
+      carritoDetalle.style.display = "none";
+    };
+  
+    // Cambiar tema
+    const themeToggle = document.getElementById('theme-toggle');
+    themeToggle.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark-theme');
+      themeToggle.textContent = document.documentElement.classList.contains('dark-theme') ? 'Claro' : 'Oscuro';
+    });
+  
+    // Cargar la página con el tema oscuro por defecto
+    document.documentElement.classList.add('dark-theme');
+  </script>
+</body>
+</html>
