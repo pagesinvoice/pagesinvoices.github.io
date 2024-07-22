@@ -37,8 +37,20 @@
       }
     
       #logo {
-        max-width: 200px;
-      }
+      width: 200px; /* Ajusta según sea necesario */
+      height: auto;
+      filter: blur(0px);
+      mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 40%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 40%, transparent 75%);
+    }
+
+    /* Efecto de hover opcional para quitar el difuminado */
+    #logo:hover {
+      filter: blur(0);
+      mask-image: none;
+      -webkit-mask-image: none;
+      transition: all 0.3s ease;
+    }
     
       #theme-toggle {
         position: absolute;
@@ -63,6 +75,7 @@
         overflow-x: auto;
         overflow-y: hidden;
         -webkit-overflow-scrolling: touch;
+        font-weight: bold;
       }
     
       .categoria-nav::-webkit-scrollbar {
@@ -83,7 +96,7 @@
     
       .categoria-nav button:hover,
       .categoria-nav button.active {
-        background-color: rgba(255, 255, 255, 0.2);
+        background-color: #e0a800;
       }
     
       .categoria-section {
@@ -98,19 +111,20 @@
     
       #productos-container {
         display: flex;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         overflow-x: auto;
         gap: 20px;
         padding: 20px;
-        justify-content: flex-start;
-        align-items: stretch;
         width: 100%;
         box-sizing: border-box;
+        flex-direction: row;
+        justify-content: center;
+        align-items: stretch;
       }
     
       .producto-card {
         flex: 0 0 auto;
-        width: 100px;
+        width: 320px;
         background-color: var(--card-background);
         border-radius: 10px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -129,7 +143,7 @@
         width: 51%;
         height: 172px;
         object-fit: cover;
-        border-radius: 10px 10px 0 0;
+        border-radius: 10px 10px 10px 10px;
         display: block;
         margin-left: auto;
         margin-right: auto;
@@ -142,9 +156,10 @@
       }
     
       .producto-precio {
-        font-size: 1.1em;
+        font-size: 20px;
         color: #ff6347;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
+        margin-top: 10px;
       }
     
       .btn-agregar {
@@ -165,7 +180,7 @@
         position: fixed;
         bottom: 20px;
         right: 20px;
-        background-color: #28a745;
+        background-color: #00c52e;
         color: white;
         width: 60px;
         height: 60px;
@@ -231,20 +246,20 @@
       }
     
       #carrito-detalle {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: var(--card-background);
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        z-index: 1001;
-        display: none;
-        width: 80%;
-        max-width: 600px;
-        max-height: 80vh;
-        overflow-y: auto;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: var(--card-background);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 1001;
+      display: none;
+      width: 80%;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: scroll;
       }
     
       #carrito-detalle h2 {
@@ -257,11 +272,12 @@
       }
     
       .carrito-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      justify-content: center;
+      flex-wrap: wrap;
       }
     
       .carrito-item-info {
@@ -362,7 +378,7 @@
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         z-index: 1002;
         display: none;
-        width: 80%;
+        width: 65%;
         max-width: 400px;
         text-align: center;
       }
@@ -449,23 +465,94 @@
         background-color: #357a38;
       }
     
-      @media (max-width: 600px) {
-        #productos-container {
-          flex-direction: column;
-          align-items: center;
-        }
-    
-        .producto-card {
-          width: 100%;
-          max-width: 300px;
-          margin-bottom: 20px;
-        }
-    
-        #carrito-detalle {
-          width: 95%;
-          max-height: 90vh;
-        }
-      }
+      /* Estilos existentes ... */
+
+  @media (max-width: 768px) {
+    #productos-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .producto-card {
+      width: 85%;
+      margin: 0;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px
+      
+    }
+
+    .producto-imagen {
+      width: 70%;
+      height: auto;
+      max-height: 131px;
+      object-fit: contain;
+      border-radius: 19px;
+    }
+
+    .producto-nombre {
+      font-size: 0.9em;
+      margin: 3px 0;
+    }
+
+    .producto-precio {
+      font-size: 0.85em;
+      margin-bottom: 5px;
+    }
+
+    .btn-agregar {
+      padding: 8px;
+      font-size: 0.8em;
+      width: 100%;
+    }
+
+    .categoria-nav {
+      justify-content: center;
+      padding: 5px;
+    }
+
+    .categoria-nav button {
+      padding: 6px 10px;
+      font-size: 0.8em;
+      margin: 2px;
+      font-weight: bold;
+    }
+  }
+
+  @media (max-width: 480px) {
+    #productos-container {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      padding: 8px;
+    }
+
+    .producto-card {
+      padding: 5px;
+    }
+
+    .producto-imagen {
+      max-height: 100px;
+    }
+
+    .producto-nombre {
+      font-size: 18px;
+      margin: 4px 0;
+    }
+
+    .producto-precio {
+      font-size: 0.75em;
+      margin-bottom: 4px;
+      font-weight: bold;
+    }
+
+    .btn-agregar {
+      padding: 6px;
+      font-size: 0.75em;
+    }
+  }
     </style>
   </head>
   <body>
@@ -478,7 +565,8 @@
     <div id="productos-container"></div>
 
     <div id="carrito-flotante">
-      🛒
+      <svg class="cart" fill="white" viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg"><path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z">
+      </path></svg>
       <span id="carrito-contador">0</span>
     </div>
 
@@ -543,7 +631,7 @@
   async function obtenerProductos() {
     const url = 'https://api.appsheet.com/api/v2/apps/703303a3-268c-4c29-82e9-735b5d28edc4/tables/PRODUCTOS/Action';
     const headers = {
-      'ApplicationAccessKey': 'V2-7ox9f-3g8f2-3oL7r-NNLJz-23FyY-mhPEJ-s44e2-8i9QT',
+      'ApplicationAccessKey': 'V2-bc3Fv-pL4YP-ylbas-ACWzv-GgoBV-2vq2R-T6SGI-j3ac9',
       'Content-Type': 'application/json'
     };
     const body = {
@@ -567,19 +655,28 @@
       }
 
       const data = await response.json();
+     
       
-      // Procesar los datos recibidos
-      productos = data
-        .filter(item => item.Mostrar === "si")  // Filtrar solo productos con Mostrar = "si"
-        .map(item => ({
-          id: item.IDproductos,
-          categoria: item.Categoria_Nombre,  // Usar Categoria_Nombre en lugar de Categoria
-          nombre: item.Nombre,
-          cantidad: item.Cantidad || 0,
-          precio: parseFloat(item["Precio Unitario"]),
-          imagen: "https://cdn-icons-png.flaticon.com/512/16696/16696570.png"
-        }));
+    // Procesar los datos recibidos
+    productos = data
+    .filter(item => item.Mostrar === "si")  // Filtrar solo productos con Mostrar = "si"
+    .map(item => {
+        // Extraer la URL de la imagen en una línea
+        const imagenUrl = JSON.parse(item.ImagenUrl || "{}").Url || "";
 
+        return {
+        id: item.IDproductos,
+        categoria: item.Categoria_Nombre,
+        idcategoria: item.Categoria,
+        nombre: item.Nombre,
+        idnombre: item.IDproductos,
+        cantidad: item.Cantidad || 0,
+        precio: parseFloat(item["Precio Unitario"]),
+        imagen: imagenUrl
+        };
+    });
+        
+        
       // Obtener categorías únicas
       const categorias = [...new Set(productos.map(producto => producto.categoria))];
 
@@ -601,8 +698,51 @@
     }
   }
   
-    // Llamar a la función para obtener los productos cuando se carga la página
-    window.addEventListener('load', obtenerProductos);
+  async function obtenerComentarios() {
+    const url = 'https://api.appsheet.com/api/v2/apps/703303a3-268c-4c29-82e9-735b5d28edc4/tables/COMENTARIOS/Action';
+    const headers = {
+        'ApplicationAccessKey': 'V2-bc3Fv-pL4YP-ylbas-ACWzv-GgoBV-2vq2R-T6SGI-j3ac9',
+        'Content-Type': 'application/json'
+    };
+    const body = {
+        "Action": "Find",
+        "Properties": {
+        "Locale": "es-CO",
+        "Timezone": "America/Bogota"
+        },
+        "Rows": []
+    };
+
+    try {
+        const response = await fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(body)
+        });
+
+        if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // Filtrar comentarios por tipo "Sabores"
+        const sabores = data.filter(item => item.Tipo === "Sabores").map(item => item.Comentarios);
+
+        // Actualizar el select de sabores
+        const saborSelect = document.getElementById("sabor-select");
+        saborSelect.innerHTML = sabores.map(sabor => `<option value="${sabor}">${sabor}</option>`).join('');
+
+    } catch (error) {
+        console.error('Error al obtener los comentarios:', error);
+    }
+    }
+  
+  // Llamar a la función para obtener los productos cuando se carga la página
+    window.addEventListener('load', async () => {
+    await obtenerProductos();
+    await obtenerComentarios();
+    });
   
         // Función para filtrar productos por categoría
     function filtrarProductos(categoria) {
@@ -619,17 +759,18 @@
         const productosFiltrados = productos.filter(p => p.categoria === categoria);
         mostrarProductos(productosFiltrados);
     }
-  
+    
     // Mostrar productos
     function mostrarProductos(productosAMostrar) {
       productosContainer.innerHTML = '';
+      
       productosAMostrar.forEach((producto) => {
         const card = document.createElement("div");
         card.className = "producto-card";
         card.innerHTML = `
           <img src="${producto.imagen}" alt="${producto.nombre}" class="producto-imagen">
           <h3 class="producto-nombre">${producto.nombre}</h3>
-          <p class="producto-precio">$${producto.precio}</p>
+          <p class="producto-precio">${(producto.precio).toLocaleString('es-CO', { style: 'currency', currency: 'COP',minimumFractionDigits: 0 })}</p>
           <button class="btn-agregar" data-id="${producto.id}" data-categoria="${producto.categoria}">Añadir al carrito</button>
         `;
         productosContainer.appendChild(card);
@@ -776,6 +917,7 @@
     document.getElementById("cerrar-carrito").onclick = () => {
       carritoDetalle.style.display = "none";
     };
+    document.getElementById("guardar-pedido").onclick = guardarPedido;
   
     const botonesEntrega = document.querySelectorAll(".btn-entrega");
     const direccionInput = document.getElementById("direccion");
@@ -802,37 +944,118 @@
     });
   
     // Guardar pedido
-    document.getElementById("guardar-pedido").onclick = () => {
-      const nombre = document.getElementById("nombre").value;
-      const telefono = document.getElementById("telefono").value;
-      const tipoEntrega = document.querySelector(".btn-entrega.active").dataset.tipo;
-      const direccion = document.getElementById("direccion").value;
-      const placa = document.getElementById("placa").value;
-  
-      if (!nombre || !telefono || (tipoEntrega === "domicilio" && !direccion)) {
+
+    async function guardarPedido() {
+    const nombre = document.getElementById("nombre").value;
+    const telefono = document.getElementById("telefono").value;
+    const tipoEntrega = document.querySelector(".btn-entrega.active").dataset.tipo;
+    const direccion = document.getElementById("direccion").value;
+    const placa = document.getElementById("placa").value;
+
+    if (!nombre || !telefono || (tipoEntrega === "domicilio" && !direccion)) {
         alert("Por favor, complete todos los campos obligatorios.");
         return;
-      }
-  
-      const pedido = {
-        items: carrito,
-        cliente: {
-          nombre,
-          telefono,
-          tipoEntrega,
-          direccion: tipoEntrega === "domicilio" ? direccion : "",
-          placa: tipoEntrega === "recoger" ? placa : "",
-        },
-        total: carrito.reduce((total, item) => total + item.cantidad * item.precio, 0),
-      };
-  
-      console.log("Pedido guardado:", pedido);
-      // Aquí puedes enviar el pedido a tu servidor o realizar otras acciones necesarias
-      alert("Pedido guardado con éxito!");
-      carrito = [];
-      actualizarCarrito();
-      carritoDetalle.style.display = "none";
+    }
+
+    const idVentas = Math.random().toString(36).substring(2, 12);
+    const fechaHora = new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' });
+    const [fecha, hora] = fechaHora.split(', ');
+
+    // Preparar datos para VENTAS
+    const ventasData = {
+        IDventas: idVentas,
+        "Fecha y hora": fechaHora,
+        Escanear: carrito[0].categoria,
+        Estado: "LISTO PARA ENTREGA",
+        MESA: "P.web",
+        FECHA: fecha,
+        HORA: hora,
+        Usuario: "appsheetautosystem@gmail.com"
     };
+
+    // Preparar datos para ORDERVENTAS
+    const orderVentasData = carrito.map(item => {
+    const productoOriginal = productos.find(p => p.id === item.id);
+    return {
+      IDorderventas: Math.random().toString(36).substring(2, 12),
+      IDventas: idVentas,
+      Categoria: productoOriginal.idcategoria,
+      Nombre: productoOriginal.idnombre,
+      Cantidad: item.cantidad,
+      Precio: item.precio,
+      "Precio total": item.precio * item.cantidad,
+      Estado: "EN CARRITO",
+      fecha: fecha
+    };
+  });
+    console.log(ventasData)
+    console.log(orderVentasData)
+    // Enviar datos a VENTAS
+    await enviarDatosAPI('VENTAS', [ventasData]);
+
+    // Enviar datos a ORDERVENTAS
+    await enviarDatosAPI('ORDERVENTAS', orderVentasData);
+
+    // Mostrar popup
+    mostrarPopup("Pedido guardado. Aproximadamente estará en 5 minutos");
+
+    // Limpiar carrito y cerrar detalles
+    carrito = [];
+    actualizarCarrito();
+    carritoDetalle.style.display = "none";
+    }
+
+    async function enviarDatosAPI(tabla, datos) {
+    const url = `https://api.appsheet.com/api/v2/apps/703303a3-268c-4c29-82e9-735b5d28edc4/tables/${tabla}/Action`;
+    const headers = {
+        'ApplicationAccessKey': 'V2-bc3Fv-pL4YP-ylbas-ACWzv-GgoBV-2vq2R-T6SGI-j3ac9',
+        'Content-Type': 'application/json'
+    };
+    const body = {
+        "Action": "Add",
+        "Properties": {
+        "Locale": "es-CO",
+        "Timezone": "America/Bogota"
+        },
+        "Rows": datos
+    };
+
+    try {
+        const response = await fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(body)
+        });
+
+        if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error(`Error al enviar datos a ${tabla}:`, error);
+    }
+    }
+
+    function mostrarPopup(mensaje) {
+    const popup = document.createElement('div');
+    popup.style.position = 'fixed';
+    popup.style.top = '50%';
+    popup.style.left = '50%';
+    popup.style.transform = 'translate(-50%, -50%)';
+    popup.style.backgroundColor = 'Black';
+    popup.style.padding = '20px';
+    popup.style.borderRadius = '10px';
+    popup.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
+    popup.style.zIndex = '1000';
+    popup.textContent = mensaje;
+
+    document.body.appendChild(popup);
+
+    setTimeout(() => {
+        document.body.removeChild(popup);
+    }, 3000);
+}
   
     // Cambiar tema
     const themeToggle = document.getElementById('theme-toggle');
