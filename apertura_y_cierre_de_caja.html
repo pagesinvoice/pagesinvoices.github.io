@@ -293,26 +293,31 @@
         setElementContent("dinero-faltante", "dineroFaltante", true);
         setElementContent("dinero-excedente", "dineroExcedente", true);
 
-        // Productos y cantidades vendidas
-  try {
-    var nombresProductos = params.get("nombreProducto") ? params.get("nombreProducto").split(",") : [];
-    var cantidadesProductos = params.get("cantidadesProducto") ? params.get("cantidadesProducto").split(",") : [];
 
-    var productos = {};
-    for (var i = 0; i < nombresProductos.length; i++) {
-      var nombreProducto = decodeURIComponent(nombresProductos[i].trim());
-      var cantidadProducto = parseInt(cantidadesProductos[i].trim(), 10) || 0;
+        try {
+  var nombresProductos = params.get("nombreProducto") ? params.get("nombreProducto").split(",") : [];
+  var cantidadesProductos = params.get("cantidadesProducto") ? params.get("cantidadesProducto").split(",") : [];
 
-      if (productos[nombreProducto]) {
-        productos[nombreProducto] += cantidadProducto;
-      } else {
-        productos[nombreProducto] = cantidadProducto;
-      }
+  var productos = {};
+  for (var i = 0; i < nombresProductos.length; i++) {
+    var nombreProducto = decodeURIComponent(nombresProductos[i].trim());
+    var cantidadProducto = parseInt(cantidadesProductos[i].trim(), 10) || 0;
+
+    if (productos[nombreProducto]) {
+      productos[nombreProducto] += cantidadProducto;
+    } else {
+      productos[nombreProducto] = cantidadProducto;
     }
+  }
 
-    // Crear y agregar la tabla de productos y cantidades vendidas
-    var tablaProductos = document.getElementById("tabla-productos");
-    if (tablaProductos) {
+  // Crear y agregar la tabla de productos y cantidades vendidas
+  var tablaProductos = document.getElementById("tabla-productos");
+  if (tablaProductos) {
+    if (Object.keys(productos).length === 0) {
+      var fila = document.createElement("tr");
+      fila.innerHTML = '<td colspan="2">No hay ventas aun</td>';
+      tablaProductos.appendChild(fila);
+    } else {
       for (var producto in productos) {
         var fila = document.createElement("tr");
         fila.innerHTML = `
@@ -322,22 +327,27 @@
         tablaProductos.appendChild(fila);
       }
     }
-  } catch (error) {
-    console.error("Error al procesar la tabla de productos:", error);
   }
-
+} catch (error) {
+  console.error("Error al procesar la tabla de productos:", error);
+}      
   // Nueva tabla de insumos
   try {
-    var nombresInsumos = params.get("insumosnombre") ? params.get("insumosnombre").split(",") : [];
-    var productosInsumos = params.get("insumosproducto") ? params.get("insumosproducto").split(",") : [];
-    var unidadesInsumos = params.get("insumosunidad") ? params.get("insumosunidad").split(",") : [];
-    var cantidadesApertura = params.get("insumoscantidada") ? params.get("insumoscantidada").split(",") : [];
-    var cantidadesCierre = params.get("insumoscantidadc") ? params.get("insumoscantidadc").split(",") : [];
-    var cantidadesUtilizadas = params.get("insumosutilizaron") ? params.get("insumosutilizaron").split(",") : [];
-    var observacionesInsumos = params.get("insumosobs") ? params.get("insumosobs").split(",") : [];
+  var nombresInsumos = params.get("insumosnombre") ? params.get("insumosnombre").split(",") : [];
+  var productosInsumos = params.get("insumosproducto") ? params.get("insumosproducto").split(",") : [];
+  var unidadesInsumos = params.get("insumosunidad") ? params.get("insumosunidad").split(",") : [];
+  var cantidadesApertura = params.get("insumoscantidada") ? params.get("insumoscantidada").split(",") : [];
+  var cantidadesCierre = params.get("insumoscantidadc") ? params.get("insumoscantidadc").split(",") : [];
+  var cantidadesUtilizadas = params.get("insumosutilizaron") ? params.get("insumosutilizaron").split(",") : [];
+  var observacionesInsumos = params.get("insumosobs") ? params.get("insumosobs").split(",") : [];
 
-    var tablaInsumos = document.getElementById("tabla-insumos");
-    if (tablaInsumos) {
+  var tablaInsumos = document.getElementById("tabla-insumos");
+  if (tablaInsumos) {
+    if (nombresInsumos.length === 0 || (nombresInsumos.length === 1 && nombresInsumos[0].trim() === "")) {
+      var fila = document.createElement("tr");
+      fila.innerHTML = '<td colspan="7">No hay insumos registrados</td>';
+      tablaInsumos.appendChild(fila);
+    } else {
       for (var i = 0; i < nombresInsumos.length; i++) {
         var fila = document.createElement("tr");
         fila.innerHTML = `
@@ -352,9 +362,10 @@
         tablaInsumos.appendChild(fila);
       }
     }
-  } catch (error) {
-    console.error("Error al procesar la tabla de insumos:", error);
   }
+} catch (error) {
+  console.error("Error al procesar la tabla de insumos:", error);
+}
 
 
 
