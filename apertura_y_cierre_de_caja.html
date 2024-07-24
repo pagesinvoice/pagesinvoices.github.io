@@ -111,6 +111,20 @@
       </tr>
       <!-- Las filas se agregarán dinámicamente con JavaScript -->
     </table>
+    
+    <!-- Nueva tabla de insumos -->
+    <table id="tabla-insumos">
+        <tr>
+          <th>Nombre Insumo</th>
+          <th>Para que producto</th>
+          <th>Unidad de medida</th>
+          <th>Cant apertura</th>
+          <th>Cant de cierre</th>
+          <th>Se utilizaron</th>
+          <th>Observacion</th>
+        </tr>
+        <!-- Las filas se agregarán dinámicamente con JavaScript -->
+      </table>
 
     <table>
       <tr>
@@ -280,32 +294,70 @@
         setElementContent("dinero-excedente", "dineroExcedente", true);
 
         // Productos y cantidades vendidas
-        var nombresProductos = params.get("nombreProducto").split(",");
-        var cantidadesProductos = params.get("cantidadesProducto").split(",");
+  try {
+    var nombresProductos = params.get("nombreProducto") ? params.get("nombreProducto").split(",") : [];
+    var cantidadesProductos = params.get("cantidadesProducto") ? params.get("cantidadesProducto").split(",") : [];
 
-        var productos = {};
-        for (var i = 0; i < nombresProductos.length; i++) {
-          var nombreProducto = decodeURIComponent(nombresProductos[i].trim());
-          var cantidadProducto = parseInt(cantidadesProductos[i].trim(), 10);
+    var productos = {};
+    for (var i = 0; i < nombresProductos.length; i++) {
+      var nombreProducto = decodeURIComponent(nombresProductos[i].trim());
+      var cantidadProducto = parseInt(cantidadesProductos[i].trim(), 10) || 0;
 
-          if (productos[nombreProducto]) {
-            productos[nombreProducto] += cantidadProducto;
-          } else {
-            productos[nombreProducto] = cantidadProducto;
-          }
-        }
+      if (productos[nombreProducto]) {
+        productos[nombreProducto] += cantidadProducto;
+      } else {
+        productos[nombreProducto] = cantidadProducto;
+      }
+    }
 
-        // Crear y agregar la tabla de productos y cantidades vendidas
-        var tablaProductos = document.getElementById("tabla-productos");
+    // Crear y agregar la tabla de productos y cantidades vendidas
+    var tablaProductos = document.getElementById("tabla-productos");
+    if (tablaProductos) {
+      for (var producto in productos) {
+        var fila = document.createElement("tr");
+        fila.innerHTML = `
+          <td>${producto}</td>
+          <td>${productos[producto]}</td>
+        `;
+        tablaProductos.appendChild(fila);
+      }
+    }
+  } catch (error) {
+    console.error("Error al procesar la tabla de productos:", error);
+  }
 
-        for (var producto in productos) {
-          var fila = document.createElement("tr");
-          fila.innerHTML = `
-              <td>${producto}</td>
-              <td>${productos[producto]}</td>
-            `;
-          tablaProductos.appendChild(fila);
-        }
+  // Nueva tabla de insumos
+  try {
+    var nombresInsumos = params.get("insumosnombre") ? params.get("insumosnombre").split(",") : [];
+    var productosInsumos = params.get("insumosproducto") ? params.get("insumosproducto").split(",") : [];
+    var unidadesInsumos = params.get("insumosunidad") ? params.get("insumosunidad").split(",") : [];
+    var cantidadesApertura = params.get("insumoscantidada") ? params.get("insumoscantidada").split(",") : [];
+    var cantidadesCierre = params.get("insumoscantidadc") ? params.get("insumoscantidadc").split(",") : [];
+    var cantidadesUtilizadas = params.get("insumosutilizaron") ? params.get("insumosutilizaron").split(",") : [];
+    var observacionesInsumos = params.get("insumosobs") ? params.get("insumosobs").split(",") : [];
+
+    var tablaInsumos = document.getElementById("tabla-insumos");
+    if (tablaInsumos) {
+      for (var i = 0; i < nombresInsumos.length; i++) {
+        var fila = document.createElement("tr");
+        fila.innerHTML = `
+          <td>${decodeURIComponent(nombresInsumos[i] || "Vacio").trim()}</td>
+          <td>${decodeURIComponent(productosInsumos[i] || "Vacio").trim()}</td>
+          <td>${decodeURIComponent(unidadesInsumos[i] || "Vacio").trim()}</td>
+          <td>${(cantidadesApertura[i] || "Vacio").trim()}</td>
+          <td>${(cantidadesCierre[i] || "Vacio").trim()}</td>
+          <td>${(cantidadesUtilizadas[i] || "No Item").trim()}</td>
+          <td>${decodeURIComponent(observacionesInsumos[i] || "Vacio").trim()}</td>
+        `;
+        tablaInsumos.appendChild(fila);
+      }
+    }
+  } catch (error) {
+    console.error("Error al procesar la tabla de insumos:", error);
+  }
+
+
+
         // Función para formatear la fecha
         function formatearFecha(fechaStr) {
           const meses = [
