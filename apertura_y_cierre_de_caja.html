@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<htmlz lang="es">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -52,15 +52,17 @@
         padding: 8px;
         border-left: 3px solid #2c3e50;
       }
-     
-      .valor-faltante, .totalcaja-app {
+
+      .valor-faltante,
+      .totalcaja-app {
         background-color: #ff6b6b;
         color: white;
         padding: 2px 5px;
         border-radius: 3px;
         font-weight: bold;
       }
-      .valor-excedente, .total-efectivo-caja {
+      .valor-excedente,
+      .total-efectivo-caja {
         background-color: #51cf66;
         color: white;
         padding: 2px 5px;
@@ -76,6 +78,23 @@
         margin: 3px 0;
       }
 
+      /* Nuevos estilos para resaltar las columnas */
+      .columna-resaltada {
+        border-left: 3px solid #000000;
+        border-right: 3px solid #000000;
+      }
+      .columna-resaltada:first-of-type {
+        border-left: 3px solid #000000;
+      }
+      .columna-resaltada:last-of-type {
+        border-right: 3px solid #000000;
+      }
+      th.columna-resaltada {
+        border-top: 3px solid #000000;
+      }
+      #tabla-insumos tr:last-child .columna-resaltada {
+        border-bottom: 3px solid #000000;
+      }
     </style>
   </head>
   <body>
@@ -89,73 +108,38 @@
       <p id="estado-caja"><strong>¿Cuadro Caja?:</strong></p>
 
       <p>
-        <span class="etiqueta valor-faltante">Valor Faltante:</span> <span id="valor-faltante" class="valor-faltante"></span>
-        <span class="etiqueta valor-faltante">Valor Faltante Calculado:</span> <span id="valor-faltante-calculado" class="valor-faltante"></span>
+        <span class="etiqueta valor-faltante">Valor Faltante:</span>
+        <span id="valor-faltante" class="valor-faltante"></span>
+        <span class="etiqueta valor-faltante">Valor Faltante Calculado:</span>
+        <span id="valor-faltante-calculado" class="valor-faltante"></span>
       </p>
       <p>
-        <span class="etiqueta valor-excedente">Valor Excedente:</span> <span id="valor-excedente" class="valor-excedente"></span>
-        <span class="etiqueta valor-excedente">Valor Excedente Calculado:</span> <span id="valor-excedente-calculado" class="valor-excedente"></span>
+        <span class="etiqueta valor-excedente">Valor Excedente:</span>
+        <span id="valor-excedente" class="valor-excedente"></span>
+        <span class="etiqueta valor-excedente">Valor Excedente Calculado:</span>
+        <span id="valor-excedente-calculado" class="valor-excedente"></span>
       </p>
-      
 
       <p id="efectivo-apertura-cierre">
-        <strong>Efectivo de Apertura: </strong><span id="efectivo-apertura"></span>
+        <strong>Efectivo de Apertura: </strong
+        ><span id="efectivo-apertura"></span>
         <strong>Efectivo de Cierre: </strong><span id="efectivo-cierre"></span>
       </p>
     </div>
-    <!-- Nueva tabla de productos y cantidades -->
-    <table id="tabla-productos">
+
+    <!-- Tabla de insumos actualizada -->
+    <table id="tabla-insumos">
       <tr>
-        <th>Producto</th>
-        <th>Cantidad Vendida</th>
+        <th>Nombre Insumo</th>
+        <th>Para que producto</th>
+        <th>Unidad de medida</th>
+        <th>Cant apertura</th>
+        <th>Cant de cierre</th>
+        <th class="columna-resaltada">Se utilizaron</th>
+        <th class="columna-resaltada">Cantidad Vendida</th>
+        <th>Observacion</th>
       </tr>
       <!-- Las filas se agregarán dinámicamente con JavaScript -->
-    </table>
-    
-    <!-- Nueva tabla de insumos -->
-    <table id="tabla-insumos">
-        <tr>
-          <th>Nombre Insumo</th>
-          <th>Para que producto</th>
-          <th>Unidad de medida</th>
-          <th>Cant apertura</th>
-          <th>Cant de cierre</th>
-          <th>Se utilizaron</th>
-          <th>Observacion</th>
-        </tr>
-        <!-- Las filas se agregarán dinámicamente con JavaScript -->
-      </table>
-
-    <table>
-      <tr>
-        <th>NOMBRES</th>
-        <th>Apertura Cant 12 Onz licor</th>
-        <th>Cierre Cant 12 Onz licor</th>
-        <th>Apertura Cant 12 Onz sin licor</th>
-        <th>Cierre Cant 12 Onz sin licor</th>
-        <th>Apertura Cant 12 Onz cremoso</th>
-        <th>Cierre Cant 12 Onz cremoso</th>
-        <th>Apertura Cant 24 Onz</th>
-        <th>Cierre Cant 24 Onz</th>
-      </tr>
-      <tr>
-        <td>CANTIDADES</td>
-        <td id="cant-ap-12-licor"></td>
-        <td id="cant-ci-12-licor"></td>
-        <td id="cant-ap-12-sin"></td>
-        <td id="cant-ci-12-sin"></td>
-        <td id="cant-ap-12-crem"></td>
-        <td id="cant-ci-12-crem"></td>
-        <td id="cant-ap-24"></td>
-        <td id="cant-ci-24"></td>
-      </tr>
-      <tr>
-        <td>DIFERENCIA</td>
-        <td id="dif-12-licor" colspan="2"></td>
-        <td id="dif-12-sin" colspan="2"></td>
-        <td id="dif-12-crem" colspan="2"></td>
-        <td id="dif-24" colspan="2"></td>
-      </tr>
     </table>
 
     <div class="totals">
@@ -208,10 +192,10 @@
     </table>
 
     <p id="advertencia" class="warning">
-      NOTA: Si el valor en ROJO es mayor que el VERDE quiere decir que hace falta
-      efectivo en caja (posiblemente diste más cambio, o registraste algunas
-      ventas como si te hubieran pagado en efectivo pero te las pagaron por
-      transferencias u otros medios revisar bien.) así mismo con el total de
+      NOTA: Si el valor en ROJO es mayor que el VERDE quiere decir que hace
+      falta efectivo en caja (posiblemente diste más cambio, o registraste
+      algunas ventas como si te hubieran pagado en efectivo pero te las pagaron
+      por transferencias u otros medios revisar bien.) así mismo con el total de
       transferencias.
     </p>
 
@@ -224,11 +208,16 @@
         var params = new URLSearchParams(window.location.search);
 
         function formatPrice(price) {
-        return '$' + parseFloat(price).toLocaleString('es-CO', {
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0
-        }).replace(/,/g, '.');
-      }
+          return (
+            "$" +
+            parseFloat(price)
+              .toLocaleString("es-CO", {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })
+              .replace(/,/g, ".")
+          );
+        }
 
         function setElementContent(id, paramName, isPrice = false) {
           var element = document.getElementById(id);
@@ -248,9 +237,17 @@
         setElementContent("fecha-fin", "fechaFin");
         setElementContent("estado-caja", "estadoCaja");
         setElementContent("valor-faltante", "valorFaltante", true);
-        setElementContent("valor-faltante-calculado", "valorFaltanteCalculado", true);
+        setElementContent(
+          "valor-faltante-calculado",
+          "valorFaltanteCalculado",
+          true
+        );
         setElementContent("valor-excedente", "valorExcedente", true);
-        setElementContent("valor-excedente-calculado", "valorExcedenteCalculado", true);
+        setElementContent(
+          "valor-excedente-calculado",
+          "valorExcedenteCalculado",
+          true
+        );
         setElementContent("efectivo-apertura", "efectivoApertura", true);
         setElementContent("efectivo-cierre", "efectivoCierre", true);
 
@@ -281,10 +278,22 @@
         setElementContent("valor-transferencias", "valorTransferencias", true);
         setElementContent("valor-tarjeta", "valorTarjeta", true);
         setElementContent("num-ordenes", "numOrdenes");
-        setElementContent("valor-efectivo-repartido", "valorEfectivoRepartido", true);
-        setElementContent("valor-transferencias-repartidas", "valorTransferenciasRepartidas", true);
+        setElementContent(
+          "valor-efectivo-repartido",
+          "valorEfectivoRepartido",
+          true
+        );
+        setElementContent(
+          "valor-transferencias-repartidas",
+          "valorTransferenciasRepartidas",
+          true
+        );
         setElementContent("valor-total-efectivo", "valorTotalEfectivo", true);
-        setElementContent("valor-total-transferencias", "valorTotalTransferencias", true);
+        setElementContent(
+          "valor-total-transferencias",
+          "valorTotalTransferencias",
+          true
+        );
 
         // Observaciones
         setElementContent("obs-info", "obsinfo");
@@ -293,81 +302,91 @@
         setElementContent("dinero-faltante", "dineroFaltante", true);
         setElementContent("dinero-excedente", "dineroExcedente", true);
 
+        // Procesar productos y cantidades vendidas
+        var nombresProductos = params.get("nombreProducto")
+          ? params.get("nombreProducto").split(",")
+          : [];
+        var cantidadesProductos = params.get("cantidadesProducto")
+          ? params.get("cantidadesProducto").split(",")
+          : [];
 
+        var productos = {};
+        for (var i = 0; i < nombresProductos.length; i++) {
+          var nombreProducto = decodeURIComponent(nombresProductos[i].trim());
+          var cantidadProducto =
+            parseInt(cantidadesProductos[i].trim(), 10) || 0;
+
+          if (productos[nombreProducto]) {
+            productos[nombreProducto] += cantidadProducto;
+          } else {
+            productos[nombreProducto] = cantidadProducto;
+          }
+        }
+
+        // Procesar y mostrar la tabla de insumos actualizada
         try {
-  var nombresProductos = params.get("nombreProducto") ? params.get("nombreProducto").split(",") : [];
-  var cantidadesProductos = params.get("cantidadesProducto") ? params.get("cantidadesProducto").split(",") : [];
+          var nombresInsumos = params.get("insumosnombre")
+            ? params.get("insumosnombre").split(",")
+            : [];
+          var productosInsumos = params.get("insumosproducto")
+            ? params.get("insumosproducto").split(",")
+            : [];
+          var unidadesInsumos = params.get("insumosunidad")
+            ? params.get("insumosunidad").split(",")
+            : [];
+          var cantidadesApertura = params.get("insumoscantidada")
+            ? params.get("insumoscantidada").split(",")
+            : [];
+          var cantidadesCierre = params.get("insumoscantidadc")
+            ? params.get("insumoscantidadc").split(",")
+            : [];
+          var cantidadesUtilizadas = params.get("insumosutilizaron")
+            ? params.get("insumosutilizaron").split(",")
+            : [];
+          var observacionesInsumos = params.get("insumosobs")
+            ? params.get("insumosobs").split(",")
+            : [];
 
-  var productos = {};
-  for (var i = 0; i < nombresProductos.length; i++) {
-    var nombreProducto = decodeURIComponent(nombresProductos[i].trim());
-    var cantidadProducto = parseInt(cantidadesProductos[i].trim(), 10) || 0;
-
-    if (productos[nombreProducto]) {
-      productos[nombreProducto] += cantidadProducto;
-    } else {
-      productos[nombreProducto] = cantidadProducto;
-    }
-  }
-
-  // Crear y agregar la tabla de productos y cantidades vendidas
-  var tablaProductos = document.getElementById("tabla-productos");
-  if (tablaProductos) {
-    if (Object.keys(productos).length === 0) {
-      var fila = document.createElement("tr");
-      fila.innerHTML = '<td colspan="2">No hay ventas aun</td>';
-      tablaProductos.appendChild(fila);
-    } else {
-      for (var producto in productos) {
-        var fila = document.createElement("tr");
-        fila.innerHTML = `
-          <td>${producto}</td>
-          <td>${productos[producto]}</td>
-        `;
-        tablaProductos.appendChild(fila);
-      }
-    }
-  }
-} catch (error) {
-  console.error("Error al procesar la tabla de productos:", error);
-}      
-  // Nueva tabla de insumos
-  try {
-  var nombresInsumos = params.get("insumosnombre") ? params.get("insumosnombre").split(",") : [];
-  var productosInsumos = params.get("insumosproducto") ? params.get("insumosproducto").split(",") : [];
-  var unidadesInsumos = params.get("insumosunidad") ? params.get("insumosunidad").split(",") : [];
-  var cantidadesApertura = params.get("insumoscantidada") ? params.get("insumoscantidada").split(",") : [];
-  var cantidadesCierre = params.get("insumoscantidadc") ? params.get("insumoscantidadc").split(",") : [];
-  var cantidadesUtilizadas = params.get("insumosutilizaron") ? params.get("insumosutilizaron").split(",") : [];
-  var observacionesInsumos = params.get("insumosobs") ? params.get("insumosobs").split(",") : [];
-
-  var tablaInsumos = document.getElementById("tabla-insumos");
-  if (tablaInsumos) {
-    if (nombresInsumos.length === 0 || (nombresInsumos.length === 1 && nombresInsumos[0].trim() === "")) {
-      var fila = document.createElement("tr");
-      fila.innerHTML = '<td colspan="7">No hay insumos registrados</td>';
-      tablaInsumos.appendChild(fila);
-    } else {
-      for (var i = 0; i < nombresInsumos.length; i++) {
-        var fila = document.createElement("tr");
-        fila.innerHTML = `
-          <td>${decodeURIComponent(nombresInsumos[i] || "Vacio").trim()}</td>
-          <td>${decodeURIComponent(productosInsumos[i] || "Vacio").trim()}</td>
-          <td>${decodeURIComponent(unidadesInsumos[i] || "Vacio").trim()}</td>
-          <td>${(cantidadesApertura[i] || "Vacio").trim()}</td>
-          <td>${(cantidadesCierre[i] || "Vacio").trim()}</td>
-          <td>${(cantidadesUtilizadas[i] || "No Item").trim()}</td>
-          <td>${decodeURIComponent(observacionesInsumos[i] || "Vacio").trim()}</td>
-        `;
-        tablaInsumos.appendChild(fila);
-      }
-    }
-  }
-} catch (error) {
-  console.error("Error al procesar la tabla de insumos:", error);
-}
-
-
+          var tablaInsumos = document.getElementById("tabla-insumos");
+          if (tablaInsumos) {
+            if (
+              nombresInsumos.length === 0 ||
+              (nombresInsumos.length === 1 && nombresInsumos[0].trim() === "")
+            ) {
+              var fila = document.createElement("tr");
+              fila.innerHTML =
+                '<td colspan="8">No hay insumos registrados</td>';
+              tablaInsumos.appendChild(fila);
+            } else {
+              for (var i = 0; i < nombresInsumos.length; i++) {
+                var fila = document.createElement("tr");
+                var productoInsumo = decodeURIComponent(
+                  productosInsumos[i] || "Vacio"
+                ).trim();
+                var cantidadVendida = productos[productoInsumo] || 0;
+                fila.innerHTML = `
+                  <td>${decodeURIComponent(
+                    nombresInsumos[i] || "Vacio"
+                  ).trim()}</td>
+                  <td>${productoInsumo}</td>
+                  <td>${decodeURIComponent(
+                    unidadesInsumos[i] || "Vacio"
+                  ).trim()}</td>
+                  <td>${(cantidadesApertura[i] || "Vacio").trim()}</td>
+                  <td>${(cantidadesCierre[i] || "Vacio").trim()}</td>
+                  <td>${(cantidadesUtilizadas[i] || "No Item").trim()}</td>
+                  <td>${cantidadVendida}</td>
+                  <td>${decodeURIComponent(
+                    observacionesInsumos[i] || "Vacio"
+                  ).trim()}</td>
+                `;
+                tablaInsumos.appendChild(fila);
+              }
+            }
+          }
+        } catch (error) {
+          console.error("Error al procesar la tabla de insumos:", error);
+        }
 
         // Función para formatear la fecha
         function formatearFecha(fechaStr) {
@@ -416,4 +435,4 @@
       });
     </script>
   </body>
-</htmlz
+</html>
