@@ -1,0 +1,512 @@
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=60mm, initial-scale=1.0"> <!-- Cambiar el ancho de la vista para el papel de 58mm -->
+    <title>Ticket de Compra</title>
+    <style>
+     body {
+            font-family: tahoma, Helvetica, sans-serif;
+            margin: 0;
+            font-size: 3mm;
+            text-align: center; /* Centrar todo el contenido */
+        }
+
+        #thermal-pos {
+           
+            margin: none;
+            max-width: 60mm;
+            
+        }
+
+        .label {
+            margin: 0;
+            margin-left: 0.5mm;
+        }
+
+        .table {
+          
+            border-collapse: collapse; /* Elimina el espacio entre celdas */
+            border-collapse: collapse;
+            border-spacing: 0;
+            
+        }
+
+        .table-header h2 {
+            margin: 0;
+            padding-left: 0.5mm;
+            
+        }
+        .table-footer.top-line td,
+        
+        .table-footer {
+            margin-left: 0.5mm;
+        }
+        .table-footer h2 {
+            margin: 0; /* Asegurarte de que no haya margen dentro de los elementos h2 */
+            padding: 1mm 0; /* Ajustar el padding superior e inferior */
+        }
+        .table-footer h4 {
+            margin: 0; /* Asegurarte de que no haya margen dentro de los elementos h2 */
+            padding: 1mm 0; /* Ajustar el padding superior e inferior */
+        }
+        .saldo-text {
+            margin: 0;
+            margin-left: 0.1mm;
+        }
+
+        .policy {
+            margin-left: 0.5mm;
+        }
+
+      /* Agrega el estilo para eliminar el espacio vertical en las celdas de las filas de la tabla */
+      .table-footer td {
+          padding: 0;
+          line-height: 1;
+      }
+      .nro_boleta {
+        margin: 0;
+        padding: 0;
+    }
+    .nro_mesa {
+        margin: 0;
+    }
+    .fecha_recepcion {
+        margin: 0;
+    }
+    
+    .info-tienda {
+        margin: 0;
+    }
+    .m-0 {
+        margin: 0;
+        font-size: 15px;
+    }
+    .direccion {
+        margin: 0;
+        
+    }
+  
+
+    </style>
+  </head>
+  <body onload="window.print()" onfocus="window.close()">
+
+    <script>
+        // Obtener los parámetros de la URL
+        const params = new URLSearchParams(window.location.search);
+
+        // Obtener los valores de los parámetros
+        var nro_boleta = params.has('boleta') ? params.get('boleta') : "---";
+        var nro_mesa = params.has('mesa') ? params.get('mesa') : "---";
+        var direc = params.has('direccion') ? params.get('direccion') : "---";
+        
+
+        var fecha = params.has('fecha') ? params.get('fecha') : "dd/mm/aaaa hh:mm:ss";
+        var fecha_entrega = params.has('fecha_entrega') ? params.get('fecha_entrega') : "hh:mm:ss";
+        var domi = params.has('domi') ? params.get('domi') : "N/A";
+        var propina = params.has('propina') ? params.get('propina') : "N/A";
+
+        var total = params.has('total') ? params.get('total') : "";
+        var subtotal_desc = params.has('subtotal_desc') ? params.get('subtotal_desc') : " ";
+        var descuento = params.has('descuento') ? params.get('descuento') : " ";
+        var estado = params.has('estado') ? params.get('estado') : "--";
+
+        //Recibe los datos de los servicios (separados por comas)
+        var cantidades = params.has('cantidades') ? params.get('cantidades') : "0";
+        var descripciones = params.has('servicios') ? params.get('servicios') : "No hay articulos";
+        var p_units = params.has('p_unit') ? params.get('p_unit') : "0.00";
+        
+        //Formato de 2 decimales
+        propina = parseFloat(propina).toLocaleString('es-ES', { minimumFractionDigits: 0 });
+        domi = parseFloat(domi).toLocaleString('es-ES', { minimumFractionDigits: 0 });
+        total = parseFloat(total).toLocaleString('es-ES', { minimumFractionDigits: 0 });
+        descuento = parseFloat(descuento).toLocaleString('es-ES', { minimumFractionDigits: 0 });
+        subtotal_desc = parseFloat(subtotal_desc).toLocaleString('es-ES', { minimumFractionDigits: 0 });
+        
+        //crea una lista de cada columna a partir de las comas.
+        cantidades = cantidades.split(",");
+        descripciones = descripciones.split(","); 
+        p_units = p_units.split(",");
+
+        //Crea una lista para mostrar en cada fila de la tabla
+        var result = [];
+
+        cantidades.forEach(function(value, id) {
+            result[id] = {
+                cantidad: cantidades[id],
+                descripcion: descripciones[id], // + " " + detalles[id], // Descomenta si deseas concatenar la descripción con el detalle
+                precio_unit: parseFloat(p_units[id]).toLocaleString('es-ES', { minimumFractionDigits: 0 }),
+            };
+        });
+    </script>
+    <div id="thermal-pos">
+        <div class="label">
+            <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+                width="70%" viewBox="0 0 598.000000 332.000000" preserveAspectRatio="xMidYMid meet">
+                <g transform="translate(0.000000,332.000000) scale(0.100000,-0.100000)"
+                fill="#000000" stroke="none">
+                <path d="M0 1660 c0 -1100 3 -1660 10 -1660 7 0 10 385 10 1135 l0 1135 39 0
+                c22 0 41 5 43 10 2 7 21 4 51 -6 69 -24 215 -16 279 15 151 73 228 227 215
+                431 -9 139 -69 275 -159 356 -22 20 -70 50 -107 68 -61 29 -74 31 -171 31 -58
+                0 -124 -3 -147 -8 l-43 -7 0 80 c0 47 -4 80 -10 80 -7 0 -10 -560 -10 -1660z
+                m293 1483 c109 -34 208 -144 249 -277 31 -99 30 -237 -2 -321 -70 -186 -249
+                -287 -423 -239 -16 5 -17 34 -17 429 l0 424 33 4 c45 5 104 -2 160 -20z"/>
+                <path d="M4874 3291 c-29 -17 -73 -54 -98 -83 -45 -51 -136 -215 -136 -244 0
+                -18 -2 -18 -42 6 -56 32 -155 53 -226 47 -201 -19 -334 -185 -334 -417 -1
+                -116 26 -187 96 -256 63 -61 122 -84 217 -84 91 0 165 29 224 85 l45 44 0 -59
+                0 -60 39 0 39 0 4 388 c5 419 8 443 64 518 48 65 154 82 276 44 l63 -20 40 40
+                39 39 -39 18 c-26 11 -73 18 -130 20 -85 4 -93 2 -141 -26z m-291 -328 c46
+                -23 49 -26 43 -55 -3 -17 -6 -136 -6 -264 l0 -234 -36 -39 c-98 -110 -260
+                -109 -360 1 -59 66 -77 118 -82 235 -3 84 0 114 17 170 62 201 241 279 424
+                186z"/>
+                <path d="M2590 2710 l0 -440 40 0 40 0 0 235 0 235 188 3 187 2 -187 3 -188 2
+                0 197 0 196 118 -6 c110 -6 249 -29 372 -62 30 -8 55 -13 57 -11 2 1 -5 21
+                -15 44 l-17 42 -297 0 -298 0 0 -440z"/>
+                <path d="M1083 3006 c-57 -18 -100 -46 -152 -100 -24 -25 -48 -43 -52 -40 -5
+                2 -5 34 -2 69 l6 65 -47 0 -46 0 0 -365 0 -365 46 0 45 0 -2 279 c-2 276 -2
+                279 21 311 32 45 132 116 174 124 43 8 88 -13 113 -52 9 -15 18 -28 19 -30 2
+                -3 64 26 73 34 10 9 -34 57 -64 70 -41 17 -76 17 -132 0z"/>
+                <path d="M1603 3005 c-109 -30 -187 -86 -222 -159 -30 -60 -27 -66 22 -66 l42
+                0 13 52 c16 67 55 117 117 148 89 44 187 27 239 -43 28 -38 28 -126 0 -164
+                -46 -61 -89 -84 -253 -134 -235 -72 -295 -117 -295 -220 0 -98 81 -163 200
+                -162 84 1 169 41 265 125 l74 64 0 -58 c0 -48 4 -62 25 -82 14 -14 37 -28 53
+                -31 l27 -7 0 100 c0 78 -4 104 -16 116 -28 29 -52 18 -147 -69 -101 -94 -186
+                -127 -269 -105 -112 30 -153 154 -76 230 43 43 84 62 241 109 219 65 267 99
+                275 193 5 65 -22 111 -86 146 -54 30 -157 38 -229 17z"/>
+                <path d="M3593 3010 c-169 -36 -281 -175 -300 -372 -16 -173 81 -316 246 -365
+                79 -23 211 -15 275 17 162 82 189 308 50 430 -21 18 -56 41 -78 51 l-41 19 96
+                0 c109 0 125 9 114 59 -19 89 -125 159 -253 166 -37 2 -86 0 -109 -5z m117
+                -36 c69 -20 138 -84 146 -134 l6 -36 -236 -1 c-130 0 -239 4 -242 8 -8 14 32
+                82 69 117 63 60 154 77 257 46z m65 -212 c65 -31 128 -93 151 -148 20 -47 17
+                -141 -5 -190 -20 -44 -66 -85 -116 -104 -49 -19 -153 -14 -218 10 -143 54
+                -244 235 -223 403 l7 57 172 0 c168 0 173 -1 232 -28z"/>
+                <path d="M5153 3005 c-56 -17 -135 -68 -172 -111 -17 -19 -33 -34 -36 -34 -3
+                0 -5 32 -5 70 l0 70 -40 0 -40 0 0 -365 0 -365 40 0 40 0 0 280 0 281 47 50
+                c61 65 123 101 175 103 36 1 45 -4 79 -42 l38 -43 33 17 c18 9 34 18 36 19 10
+                8 -33 55 -63 69 -39 19 -75 19 -132 1z"/>
+                <path d="M5675 3007 c-101 -27 -197 -94 -229 -161 -26 -56 -22 -66 29 -66 41
+                0 45 2 45 25 0 101 108 198 220 198 101 0 160 -54 160 -146 0 -110 -59 -158
+                -270 -218 -137 -38 -204 -66 -247 -103 -82 -69 -63 -205 35 -255 115 -58 262
+                -15 397 117 l55 54 0 -52 c0 -63 20 -103 60 -120 17 -7 32 -11 35 -9 3 4 8
+                158 6 196 -1 7 -10 17 -21 23 -27 14 -49 2 -130 -73 -82 -76 -156 -111 -230
+                -111 -97 0 -160 55 -160 140 0 92 64 138 285 204 220 65 265 100 265 202 0 74
+                -24 112 -86 140 -56 24 -155 31 -219 15z"/>
+                <path d="M2066 2351 c-23 -25 -17 -70 11 -88 19 -13 24 -12 42 6 26 26 27 55
+                1 81 -25 25 -32 25 -54 1z"/>
+                <path d="M1690 1520 l0 -510 45 0 45 0 0 510 0 510 -45 0 -45 0 0 -510z"/>
+                <path d="M2480 1865 c0 -85 -2 -155 -4 -155 -2 0 -25 10 -51 21 -67 30 -193
+                37 -266 15 -102 -30 -186 -113 -233 -230 -16 -41 -20 -74 -21 -166 0 -104 3
+                -120 26 -171 32 -68 87 -124 148 -153 70 -32 197 -30 272 5 30 14 72 43 92 64
+                l37 38 0 -62 0 -62 43 3 42 3 3 503 2 502 -45 0 -45 0 0 -155z m-56 -148 l56
+                -26 0 -270 0 -270 -32 -37 c-40 -45 -119 -84 -172 -84 -98 0 -193 65 -243 168
+                -26 53 -28 66 -28 177 0 116 1 123 34 193 39 83 97 141 164 166 59 22 151 15
+                221 -17z"/>
+                <path d="M1143 1888 c-18 -29 -393 -862 -389 -865 4 -4 28 45 98 205 l41 92
+                232 0 231 0 74 -155 73 -155 43 0 c24 0 44 4 44 10 0 17 -422 880 -431 880 -4
+                0 -11 -6 -16 -12z m96 -330 l110 -228 -225 0 -224 0 24 53 c123 276 191 416
+                197 410 4 -4 57 -110 118 -235z"/>
+                <path d="M2993 1740 c-96 -31 -192 -116 -208 -182 -7 -27 -6 -28 39 -28 41 0
+                46 2 46 23 0 13 12 46 26 75 59 118 219 160 309 81 43 -38 60 -93 45 -148 -23
+                -85 -79 -123 -260 -176 -159 -46 -233 -80 -269 -120 -55 -63 -49 -159 13 -213
+                104 -91 273 -59 419 78 l67 62 0 -46 c0 -26 7 -61 16 -77 15 -29 70 -63 86
+                -53 12 8 10 182 -2 205 -20 36 -55 23 -137 -51 -95 -86 -148 -113 -228 -118
+                -97 -5 -161 41 -171 124 -12 96 57 151 267 213 218 64 274 102 286 190 8 61
+                -19 116 -75 149 -62 36 -179 41 -269 12z"/>
+                <path d="M3732 1745 c-18 -8 -45 -24 -60 -35 -32 -25 -82 -99 -82 -120 0 -8
+                14 9 30 37 39 68 94 105 163 111 58 4 101 -18 141 -71 20 -27 21 -44 26 -340
+                l5 -312 43 -3 42 -3 0 260 c0 284 3 300 62 388 64 95 193 110 264 31 42 -46
+                44 -73 44 -498 0 -250 4 -429 11 -465 21 -115 87 -203 184 -247 71 -32 221
+                -33 281 -1 125 67 176 221 114 343 -22 43 -50 66 -100 80 -80 23 -170 -33
+                -170 -106 0 -33 2 -36 23 -30 12 3 30 6 40 6 13 0 17 9 17 43 0 54 22 77 74
+                77 79 0 148 -117 130 -219 -22 -118 -110 -191 -232 -191 -116 0 -209 58 -255
+                158 -21 45 -22 63 -27 512 -6 490 -6 498 -53 549 -53 57 -175 79 -255 46 -48
+                -21 -105 -77 -127 -126 -10 -21 -21 -39 -25 -39 -4 0 -10 18 -14 39 -8 49 -48
+                98 -101 122 -49 22 -146 24 -193 4z"/>
+                <path d="M4920 1745 c-76 -24 -152 -76 -187 -129 -47 -68 -44 -86 11 -86 l43
+                0 6 42 c7 55 53 117 107 148 57 32 160 35 203 7 65 -43 85 -132 47 -207 -23
+                -46 -90 -88 -179 -115 -273 -82 -314 -101 -350 -165 -44 -79 -11 -179 74 -220
+                104 -50 247 -8 378 110 l67 62 0 -51 c0 -78 17 -104 83 -125 15 -5 17 4 17
+                104 0 107 0 110 -24 116 -33 8 -60 -8 -133 -77 -77 -74 -149 -109 -222 -109
+                -97 0 -161 56 -161 140 0 88 56 133 230 186 243 74 298 106 321 183 24 79 -29
+                162 -120 190 -51 15 -155 13 -211 -4z"/>
+                <path d="M3490 1379 l0 -370 43 3 42 3 5 273 c3 151 3 316 2 368 l-4 94 -44 0
+                -44 0 0 -371z"/>
+                <path d="M5106 205 c-4 -13 -2 -14 14 -5 23 13 26 20 6 20 -8 0 -16 -7 -20
+                -15z"/>
+                <path d="M202 153 c-33 -27 -38 -73 -12 -106 12 -15 28 -27 36 -27 13 0 13 2
+                0 16 -19 18 -22 94 -4 112 17 17 49 15 65 -5 13 -17 14 -17 11 2 -4 28 -66 33
+                -96 8z"/>
+                <path d="M386 149 c-18 -14 -26 -30 -26 -53 0 -36 24 -76 46 -76 13 0 13 3 0
+                22 -30 42 -14 118 23 118 41 0 64 -73 37 -115 -20 -30 -4 -33 24 -5 28 28 26
+                75 -5 105 -30 30 -64 32 -99 4z"/>
+                <path d="M578 95 c2 -41 7 -75 10 -75 4 0 5 28 4 61 -3 37 0 59 6 55 5 -3 26
+                -30 47 -61 21 -30 42 -55 47 -55 4 0 8 19 7 43 0 26 -3 35 -7 25 -6 -14 -14
+                -8 -41 32 -23 33 -41 50 -55 50 -20 0 -21 -4 -18 -75z"/>
+                <path d="M676 162 c7 -4 14 -18 17 -32 l4 -25 2 27 c0 14 7 29 14 31 6 3 -1 6
+                -18 6 -16 0 -25 -3 -19 -7z"/>
+                <path d="M770 148 c1 -21 2 -21 11 -5 5 9 17 17 24 17 12 0 15 -16 15 -70 0
+                -56 3 -70 15 -70 12 0 15 14 15 70 0 56 3 70 15 70 9 0 20 -10 25 -22 8 -22 9
+                -22 9 5 1 27 0 27 -64 27 -61 0 -65 -1 -65 -22z"/>
+                <path d="M958 161 c10 -6 13 -27 10 -75 -3 -58 -1 -66 15 -66 15 0 17 10 17
+                71 0 62 2 70 18 67 20 -4 31 -58 11 -58 -8 0 -8 -4 -2 -12 6 -7 13 -25 17 -41
+                3 -15 13 -27 21 -27 12 0 14 7 9 28 -4 15 -11 32 -16 39 -5 7 -5 14 2 18 17
+                10 11 44 -9 55 -24 12 -112 14 -93 1z"/>
+                <path d="M1165 145 c-23 -22 -26 -32 -21 -63 3 -20 13 -43 23 -49 24 -18 38
+                -16 23 3 -14 16 -18 93 -6 112 11 19 54 14 66 -7 15 -29 12 -87 -6 -105 -13
+                -13 -13 -16 -1 -16 39 0 63 84 34 123 -6 10 -29 20 -49 23 -31 5 -41 2 -63
+                -21z"/>
+                <path d="M1360 155 c8 -10 11 -36 8 -75 -4 -52 -2 -60 13 -60 15 0 17 7 12 53
+                -3 32 -1 62 6 75 11 20 9 22 -20 22 -27 0 -30 -2 -19 -15z"/>
+                <path d="M1588 164 c8 -4 12 -29 12 -75 0 -55 3 -69 15 -69 12 0 15 14 15 70
+                0 62 2 70 19 70 31 0 51 -28 51 -70 0 -22 -7 -45 -16 -54 -20 -21 -5 -21 24 0
+                16 11 22 25 22 53 0 58 -16 72 -90 77 -36 2 -59 1 -52 -2z"/>
+                <path d="M1798 162 c10 -7 13 -28 10 -76 -3 -58 -1 -66 15 -66 13 0 17 8 17
+                36 0 31 3 36 20 31 12 -3 20 0 20 8 0 8 -8 11 -20 8 -17 -5 -20 0 -20 26 0 24
+                4 31 20 31 10 0 24 -8 30 -17 10 -16 10 -16 8 2 -3 17 -12 20 -58 23 -35 1
+                -50 -1 -42 -6z"/>
+                <path d="M2049 157 c9 -12 12 -35 9 -77 -4 -53 -2 -60 14 -60 14 0 16 6 12 30
+                -6 27 -4 30 19 30 27 0 57 23 57 43 -1 27 -21 40 -71 45 -49 5 -53 4 -40 -11z
+                m76 -16 c8 -26 -4 -51 -25 -51 -15 0 -20 23 -12 63 4 15 31 6 37 -12z"/>
+                <path d="M2218 161 c10 -6 13 -27 10 -75 -3 -58 -1 -66 15 -66 13 0 17 8 17
+                36 0 31 3 36 20 31 12 -3 20 0 20 8 0 8 -8 11 -20 8 -17 -5 -20 0 -20 26 0 24
+                4 31 20 31 10 0 24 -8 29 -17 9 -16 10 -16 11 5 0 20 -4 22 -57 22 -36 0 -53
+                -4 -45 -9z"/>
+                <path d="M2402 158 c-25 -25 -14 -57 28 -78 43 -22 47 -29 28 -49 -11 -11 -10
+                -13 1 -9 8 2 19 12 25 21 14 22 0 46 -40 67 -38 22 -44 50 -10 50 14 0 30 -8
+                36 -17 10 -16 10 -16 8 2 -4 24 -56 33 -76 13z"/>
+                <path d="M2575 145 c-31 -30 -33 -77 -5 -105 30 -30 41 -24 23 11 -23 47 -8
+                103 29 107 22 3 30 -2 38 -23 15 -39 12 -81 -6 -99 -14 -14 -14 -16 0 -16 22
+                0 46 40 46 75 0 36 -8 48 -37 64 -34 17 -62 13 -88 -14z"/>
+                <path d="M3028 161 c8 -4 28 -39 47 -77 l33 -69 15 36 c21 51 30 91 10 49
+                l-16 -35 -23 53 c-20 45 -27 52 -51 52 -19 0 -24 -3 -15 -9z"/>
+                <path d="M3154 159 c-3 -6 -1 -15 6 -19 9 -5 11 -25 8 -64 -4 -47 -2 -56 12
+                -56 14 0 16 8 12 54 -2 30 1 63 7 75 11 19 9 21 -13 21 -14 0 -28 -5 -32 -11z"/>
+                <path d="M3279 147 c5 -13 8 -47 6 -75 -3 -45 -1 -52 15 -52 16 0 18 5 13 35
+                -5 30 -3 35 15 35 11 0 23 -6 25 -12 3 -7 6 -3 6 8 1 17 -4 20 -24 16 -19 -3
+                -25 0 -25 14 0 31 16 47 39 41 12 -3 21 -1 21 4 0 5 -22 9 -50 9 -48 0 -49 -1
+                -41 -23z"/>
+                <path d="M3450 150 c7 -14 10 -45 8 -76 -4 -44 -2 -54 11 -54 13 0 16 13 16
+                67 0 62 2 68 22 71 46 7 71 -80 33 -118 -26 -26 -10 -26 24 1 31 25 35 66 8
+                99 -14 18 -32 24 -76 28 -58 5 -58 5 -46 -18z"/>
+                <path d="M3658 95 c3 -62 6 -75 20 -75 15 0 17 10 14 66 -3 48 0 69 10 75 9 6
+                3 9 -17 9 l-30 0 3 -75z"/>
+                <path d="M3807 163 c-24 -6 -50 -59 -41 -86 9 -29 34 -57 51 -57 12 0 12 3 -1
+                16 -19 18 -22 94 -4 112 18 18 55 15 68 -5 10 -16 10 -16 8 2 -3 20 -41 29
+                -81 18z"/>
+                <path d="M3958 95 c3 -62 6 -75 20 -75 14 0 16 9 14 60 -3 38 1 66 8 75 10 13
+                8 15 -16 15 l-29 0 3 -75z"/>
+                <path d="M4078 95 c2 -41 7 -75 10 -75 4 0 5 28 4 61 -2 34 0 59 5 56 4 -3 26
+                -30 48 -61 43 -60 55 -68 55 -36 0 30 -81 130 -105 130 -19 0 -20 -6 -17 -75z"/>
+                <path d="M4188 158 c9 -9 15 -9 24 0 9 9 7 12 -12 12 -19 0 -21 -3 -12 -12z"/>
+                <path d="M4322 145 c-14 -30 -16 -46 -3 -26 6 9 14 -4 26 -43 13 -41 23 -56
+                36 -56 17 0 16 6 -9 75 -15 41 -30 75 -33 75 -3 0 -11 -11 -17 -25z"/>
+                <path d="M4538 95 c3 -63 6 -75 21 -75 14 0 16 7 13 36 -4 35 -3 37 22 32 17
+                -3 26 -1 26 7 0 8 -9 10 -26 7 -23 -4 -25 -2 -22 24 2 24 8 29 31 29 15 -1 27
+                3 27 7 0 4 -21 8 -47 8 l-48 0 3 -75z"/>
+                <path d="M4716 155 c-9 -9 -16 -20 -16 -24 0 -12 23 -36 53 -55 20 -12 27 -23
+                24 -37 -7 -25 9 -24 23 1 15 27 -3 59 -41 72 -37 13 -41 48 -4 48 13 0 29 -8
+                35 -17 10 -16 10 -16 8 2 -4 26 -59 33 -82 10z"/>
+                <path d="M4860 148 c1 -21 2 -21 11 -5 5 9 17 17 25 17 13 0 15 -12 12 -70 -3
+                -61 -1 -70 15 -70 14 0 17 10 17 70 0 56 3 70 15 70 9 0 20 -10 25 -22 8 -22
+                9 -22 9 5 1 27 0 27 -64 27 -61 0 -65 -1 -65 -22z"/>
+                <path d="M5048 162 c10 -7 13 -28 10 -76 -3 -58 -1 -66 15 -66 13 0 17 8 17
+                36 0 31 3 36 20 31 12 -3 20 0 20 8 0 8 -8 11 -20 8 -17 -5 -20 0 -20 26 0 24
+                4 31 20 31 10 0 24 -8 30 -17 10 -16 10 -16 8 2 -3 17 -12 20 -58 23 -35 1
+                -50 -1 -42 -6z"/>
+                <path d="M5210 153 c0 -13 3 -14 12 -5 7 7 18 12 26 12 11 0 13 -16 10 -70 -3
+                -61 -1 -70 15 -70 15 0 17 10 17 71 0 66 1 71 20 66 11 -3 20 -1 20 4 0 5 -27
+                9 -60 9 -50 0 -60 -3 -60 -17z"/>
+                <path d="M5400 155 c8 -10 11 -36 8 -75 -4 -52 -2 -60 13 -60 15 0 17 7 12 53
+                -3 32 -1 62 6 75 11 20 9 22 -20 22 -27 0 -30 -2 -19 -15z"/>
+                <path d="M5537 150 c-19 -15 -27 -31 -27 -54 0 -36 24 -76 46 -76 13 0 13 3 0
+                22 -18 26 -21 71 -6 99 13 24 55 25 70 2 10 -16 10 -16 8 2 -5 29 -57 32 -91
+                5z"/>
+                <path d="M5738 145 c-3 -14 -2 -25 2 -25 5 0 16 -22 26 -50 12 -33 24 -50 35
+                -50 15 0 14 9 -11 72 -31 79 -45 93 -52 53z"/>
+                <path d="M2861 94 c0 -11 3 -14 6 -6 3 7 2 16 -1 19 -3 4 -6 -2 -5 -13z"/>
+                <path d="M4296 84 c-4 -9 -4 -19 -1 -22 2 -3 7 3 11 12 4 9 4 19 1 22 -2 3 -7
+                -3 -11 -12z"/>
+                <path d="M5702 51 c-6 -17 -7 -31 -3 -31 8 0 22 52 16 58 -1 2 -7 -11 -13 -27z"/>
+                <path d="M282 40 c-10 -17 -10 -20 3 -20 8 0 15 9 15 20 0 11 -1 20 -3 20 -1
+                0 -8 -9 -15 -20z"/>
+                <path d="M1450 46 c0 -8 -6 -17 -12 -19 -8 -3 -6 -6 5 -6 11 -1 17 6 17 19 0
+                11 -2 20 -5 20 -3 0 -5 -6 -5 -14z"/>
+                <path d="M2387 40 c3 -11 9 -20 15 -20 5 0 4 9 -2 20 -6 11 -12 20 -14 20 -2
+                0 -2 -9 1 -20z"/>
+                <path d="M3872 40 c-10 -17 -10 -20 3 -20 8 0 15 9 15 20 0 11 -1 20 -3 20 -1
+                0 -8 -9 -15 -20z"/>
+                <path d="M4700 42 c0 -14 6 -22 16 -22 14 0 15 3 3 18 -7 9 -15 19 -16 21 -2
+                2 -3 -5 -3 -17z"/>
+                <path d="M2310 35 c-8 -9 -8 -15 -2 -15 12 0 26 19 19 26 -2 2 -10 -2 -17 -11z"/>
+                <path d="M4276 35 c-3 -8 -1 -15 4 -15 6 0 10 7 10 15 0 8 -2 15 -4 15 -2 0
+                -6 -7 -10 -15z"/>
+                <path d="M4622 35 c-11 -12 -10 -15 3 -15 8 0 15 7 15 15 0 18 -2 18 -18 0z"/>
+                <path d="M5616 35 c-3 -8 -1 -15 4 -15 6 0 10 7 10 15 0 8 -2 15 -4 15 -2 0
+                -6 -7 -10 -15z"/>
+                <path d="M1885 30 c-3 -5 -1 -10 4 -10 6 0 11 5 11 10 0 6 -2 10 -4 10 -3 0
+                -8 -4 -11 -10z"/>
+                <path d="M2841 24 c0 -11 3 -14 6 -6 3 7 2 16 -1 19 -3 4 -6 -2 -5 -13z"/>
+                <path d="M3035 30 c-3 -5 -1 -10 4 -10 6 0 11 5 11 10 0 6 -2 10 -4 10 -3 0
+                -8 -4 -11 -10z"/>
+                <path d="M3360 30 c-13 -8 -12 -10 3 -10 9 0 17 5 17 10 0 12 -1 12 -20 0z"/>
+                <path d="M5135 30 c-3 -5 -1 -10 4 -10 6 0 11 5 11 10 0 6 -2 10 -4 10 -3 0
+                -8 -4 -11 -10z"/>
+                </g>
+</svg>
+
+
+                                            
+            <br/>
+            <br/>
+            <p class="info-tienda">
+                Domicilio: BLVD RÍO FUERTE 2677
+                VIÑEDOS, LOS MOCHIS, SIN.
+                <br>
+            </p>
+        </div>
+        
+        <div class="label">
+            <b>TICKET:</b>
+            <h1 class="nro_boleta" id="nro_boleta_id" ></h1>
+            <h1 class="nro_mesa" id="nro_mesa_id" ></h1>
+            <h3 class="direccion" id="nro_direccion_id" ></h3>
+        </div>
+        <div class="label">
+            <p class="fecha_recepcion">
+                FECHA DE RECEPCION:
+                <br>
+                <b id="fechaR"></b>
+                <b span id="hora"></b>
+            </p>
+
+        </div>
+
+        <!-- <div class="line">***********************************************</div> -->
+        
+   
+        <table class="table">
+            <tbody id="tablaBody">
+                <tr class="table-header" >
+                    <th><h2>Cant</h2></th>
+                    <th><h2>Descripcion</h2></th>
+                    <th><h2>Total</h2></th>
+                </tr>
+                <script>
+                    /*var result = [
+                        { cantidad: 3, descripcion: "hamburguesa doble carne", precio_unit: 10000 },
+                        { cantidad: 5, descripcion: "Perro mas gaseosa y de todo", precio_unit: 20000 },
+                        // ... otros objetos en el array
+                    ];*/
+
+                    var tablaBody = document.getElementById("tablaBody");
+
+                    result.forEach(function(row) {
+                    var newRow = document.createElement("tr");
+                    newRow.className = "table-item";
+
+                    newRow.innerHTML = `
+                        <td class="item">${row.cantidad}</td>
+                        <td class="item">${row.descripcion}</td>
+                        <td class="item">${row.precio_unit}</td>
+                    `;
+                    tablaBody.appendChild(newRow);
+                    });
+                    // Agrega una fila adicional con un espacio
+                    var spaceRow = document.createElement("tr");
+                    spaceRow.innerHTML = `<td colspan="3">&nbsp;</td>`;
+                    tablaBody.appendChild(spaceRow);
+
+                </script>
+                <!-- 
+                <tr class="table-footer top-line">
+                    <td class=""  colspan="2" id="propincell"><h4>Propina Sugerida:</h4></td>
+                    <td colspan="2"><h4 id="propina"></h4></td>
+                </tr>
+                <tr class="table-footer top-line">
+                    <td class=""  colspan="2" id="domicilioCell"><h4>DOMICILIO:</h4></td>
+                    <td colspan="2"><h4 id="domi"></h4></td>
+                </tr>
+               -->
+                <tr class="table-footer">
+                    <td colspan="2"><h2>EFECTIVO:</h2></td>
+                    <td colspan="2"><h2 id="efectivo"></h2></td>
+                    
+                </tr>
+                <tr class="table-footer top-line">
+                    <td class=""  colspan="2"><h2>TOTAL:</h2></td>
+                    <td colspan="2"><h2 id="total"></h2></td>
+                </tr>
+                <tr class="table-footer">
+                    <td colspan="2"><h2>CAMBIO:</h2></td>
+                    <td colspan="2"><h2 id="devueltas"></h2></td>
+                </tr>
+                
+            </tbody>
+        </table>
+        <br/>
+        <p class="saldo-text">
+            <b><span class="estado-deuda" id="estado"></span></b>
+        </p>
+        <div class="policy">
+            <!--<p class="policy-title">
+                <b>IMPORTANTE:</b>
+            </p>-->
+        
+            <p class="m-0">
+               Contactos:
+               <br/>
+               668 146 3502
+               <br/>
+            </p>
+    </div>
+    <script>
+        var nroBoletaElement = document.getElementById("nro_boleta_id").textContent = nro_boleta;
+        var nroMesaElement = document.getElementById("nro_mesa_id").textContent = nro_mesa;
+        var nroDireccion = document.getElementById("nro_direccion_id").textContent = direc;
+
+
+        var fechaElement = document.getElementById("fechaR").textContent = fecha;
+        var fecha_entregaElement = document.getElementById("hora").textContent = fecha_entrega;
+
+        /*const propinaCell = document.getElementById("propinaCell");
+        var propinaElement = document.getElementById("propina");
+                    // Verifica si domi es igual a "N/A"
+            if (propina == "NaN") {
+                    // Si domi es "N/A", oculta el elemento <td> que contiene la etiqueta y el valor
+                propinaCell.style.display = "none";
+            } else {
+             // Si domi no es "N/A", muestra el valor en el elemento <h2>
+             propinaElement.textContent = propina;
+            }  
+
+        const domicilioCell = document.getElementById("domicilioCell");
+        var domiElement = document.getElementById("domi");
+                    // Verifica si domi es igual a "N/A"
+            if (domi == "NaN") {
+                    // Si domi es "N/A", oculta el elemento <td> que contiene la etiqueta y el valor
+                domicilioCell.style.display = "none";
+            } else {
+             // Si domi no es "N/A", muestra el valor en el elemento <h2>
+             domiElement.textContent = domi;
+            }       */
+        var totalElement = document.getElementById("total").textContent = total;
+        var subtotal_descElement = document.getElementById("efectivo").textContent = descuento;
+        var descuentoElement = document.getElementById("devueltas").textContent = subtotal_desc;
+        var estadoElement = document.getElementById("estado").textContent = estado;
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
