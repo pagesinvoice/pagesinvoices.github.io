@@ -475,10 +475,10 @@
         var fecha_entregaElement = document.getElementById("hora").textContent = fecha_entrega;
       
         if (mediodepago === "TARJETA" || mediodepago === "TRANSFERENCIA") {
-        document.getElementById("medioPago").innerText = mediodepago + ":";
+          document.getElementById("medioPago").innerText = mediodepago + ":";
+          document.getElementById("efectivo").textContent = total;
           } else {
           document.getElementById("medioPago").innerText = "EFECTIVO:";
-          var totalElement_2 = document.getElementById("efectivo").textContent = total;
           
           }
         var descuentoElement = document.getElementById("devueltas").textContent = subtotal_desc;
