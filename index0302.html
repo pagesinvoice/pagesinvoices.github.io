@@ -112,6 +112,7 @@
         var total = params.has('total') ? params.get('total') : "";
         var subtotal_desc = params.has('subtotal_desc') ? params.get('subtotal_desc') : "0";
         var descuento = params.has('descuento') ? params.get('descuento') : "0";
+        var mediodepago = params.has('mediodepago') ? params.get('mediodepago') : "EFECTIVO";
         var estado = params.has('estado') ? params.get('estado') : "--";
 
         //Recibe los datos de los servicios (separados por comas)
@@ -470,28 +471,13 @@
 
         var fechaElement = document.getElementById("fechaR").textContent = fecha;
         var fecha_entregaElement = document.getElementById("hora").textContent = fecha_entrega;
+        if (mediodepago === "TARJETA") {
+        document.getElementById("medioPago").innerText = "TARJETA:";
+          } else {
+        document.getElementById("medioPago").innerText = "EFECTIVO:";
+        }
 
-        /*const propinaCell = document.getElementById("propinaCell");
-        var propinaElement = document.getElementById("propina");
-                    // Verifica si domi es igual a "N/A"
-            if (propina == "NaN") {
-                    // Si domi es "N/A", oculta el elemento <td> que contiene la etiqueta y el valor
-                propinaCell.style.display = "none";
-            } else {
-             // Si domi no es "N/A", muestra el valor en el elemento <h2>
-             propinaElement.textContent = propina;
-            }  
-
-        const domicilioCell = document.getElementById("domicilioCell");
-        var domiElement = document.getElementById("domi");
-                    // Verifica si domi es igual a "N/A"
-            if (domi == "NaN") {
-                    // Si domi es "N/A", oculta el elemento <td> que contiene la etiqueta y el valor
-                domicilioCell.style.display = "none";
-            } else {
-             // Si domi no es "N/A", muestra el valor en el elemento <h2>
-             domiElement.textContent = domi;
-            }       */
+        
         var totalElement = document.getElementById("total").textContent = total;
         var subtotal_descElement = document.getElementById("efectivo").textContent = descuento;
         var descuentoElement = document.getElementById("devueltas").textContent = subtotal_desc;
