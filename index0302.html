@@ -468,7 +468,9 @@
         var nroMesaElement = document.getElementById("nro_mesa_id").textContent = nro_mesa;
         var nroDireccion = document.getElementById("nro_direccion_id").textContent = direc;
 
-
+        
+        var totalElement = document.getElementById("total").textContent = total;
+        var subtotal_descElement = document.getElementById("efectivo").textContent = descuento;
         var fechaElement = document.getElementById("fechaR").textContent = fecha;
         var fecha_entregaElement = document.getElementById("hora").textContent = fecha_entrega;
         if (mediodepago === "TARJETA" || mediodepago === "TRANSFERENCIA") {
@@ -478,10 +480,6 @@
           document.getElementById("efectivo").textContent = total ;
           
           }
-
-        
-        var totalElement = document.getElementById("total").textContent = total;
-        var subtotal_descElement = document.getElementById("efectivo").textContent = descuento;
         var descuentoElement = document.getElementById("devueltas").textContent = subtotal_desc;
         var estadoElement = document.getElementById("estado").textContent = estado;
     </script>
