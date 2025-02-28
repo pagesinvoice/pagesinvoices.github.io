@@ -471,11 +471,13 @@
 
         var fechaElement = document.getElementById("fechaR").textContent = fecha;
         var fecha_entregaElement = document.getElementById("hora").textContent = fecha_entrega;
-        if (mediodepago === "TARJETA") {
-        document.getElementById("medioPago").innerText = "TARJETA:";
+        if (mediodepago === "TARJETA" || mediodepago === "TRANSFERENCIA") {
+        document.getElementById("medioPago").innerText = mediodepago + ":";
           } else {
-        document.getElementById("medioPago").innerText = "EFECTIVO:";
-        }
+          document.getElementById("medioPago").innerText = "EFECTIVO:";
+          document.getElementById("efectivo").textContent = total ;
+          
+          }
 
         
         var totalElement = document.getElementById("total").textContent = total;
