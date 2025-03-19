@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Visor de PDF con Selector de Archivo</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: #f0f0f0;
+        margin: 0;
+        padding: 20px;
+      }
+      #pdf-canvas {
+        border: 1px solid #ccc;
+        background: #fff;
+        margin-top: 20px;
+      }
+      .controls {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .controls button {
+        padding: 10px 15px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Visor de PDF</h1>
+    <!-- Input para seleccionar archivo PDF -->
+    <input type="file" id="file-input" accept="application/pdf" />
+
+    <canvas id="pdf-canvas"></canvas>
+
+    <div class="controls">
+      <button id="prev">Anterior</button>
+      <span
+        >Página: <span id="page_num"></span> / <span id="page_count"></span
+      ></span>
+      <button id="next">Siguiente</button>
+    </div>
+
+    <!-- Incluir pdf.js desde CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <script>
+      let pdfDoc = null,
+        pageNum = 1,
+        pageRendering = false,
+        pageNumPending = null,
+        scale = 1.5,
+        canvas = document.getElementById("pdf-canvas"),
+        ctx = canvas.getContext("2d");
+
+      // Función para renderizar una página
+      function renderPage(num) {
+        pageRendering = true;
+        pdfDoc.getPage(num).then(function (page) {
+          const viewport = page.getViewport({ scale: scale });
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+
+          const renderContext = {
+            canvasContext: ctx,
+            viewport: viewport,
+          };
+
+          const renderTask = page.render(renderContext);
+          renderTask.promise.then(function () {
+            pageRendering = false;
+            document.getElementById("page_num").textContent = num;
+            if (pageNumPending !== null) {
+              renderPage(pageNumPending);
+              pageNumPending = null;
+            }
+          });
+        });
+      }
+
+      // Control de cola para renderizado
+      function queueRenderPage(num) {
+        if (pageRendering) {
+          pageNumPending = num;
+        } else {
+          renderPage(num);
+        }
+      }
+
+      // Botón Página Anterior
+      document.getElementById("prev").addEventListener("click", function () {
+        if (pageNum <= 1) {
+          return;
+        }
+        pageNum--;
+        queueRenderPage(pageNum);
+      });
+
+      // Botón Página Siguiente
+      document.getElementById("next").addEventListener("click", function () {
+        if (pdfDoc && pageNum >= pdfDoc.numPages) {
+          return;
+        }
+        pageNum++;
+        queueRenderPage(pageNum);
+      });
+
+      // Función para cargar el PDF desde la URL creada a partir del archivo seleccionado
+      function loadPDF(pdfUrl) {
+        pdfjsLib
+          .getDocument(pdfUrl)
+          .promise.then(function (pdfDoc_) {
+            pdfDoc = pdfDoc_;
+            document.getElementById("page_count").textContent = pdfDoc.numPages;
+            pageNum = 1;
+            renderPage(pageNum);
+          })
+          .catch(function (error) {
+            console.error("Error al cargar el PDF:", error);
+          });
+      }
+
+      // Evento para detectar la selección del archivo PDF
+      document
+        .getElementById("file-input")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (file && file.type === "application/pdf") {
+            // Crear una URL para el archivo PDF
+            const fileURL = URL.createObjectURL(file);
+            loadPDF(fileURL);
+          } else {
+            alert("Por favor selecciona un archivo PDF válido.");
+          }
+        });
+    </script>
+  </body>
+</html>
