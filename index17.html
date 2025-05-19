@@ -110,6 +110,7 @@
 
       // Obtener los valores de los parámetros
       var nro_boleta = params.has("boleta") ? params.get("boleta") : "---";
+      var documento = params.has("documento") ? params.get("documento") : "---"; // Added documento parameter
 
       var fecha = params.has("fecha")
         ? params.get("fecha")
@@ -119,18 +120,18 @@
 
       var estado = params.has("estado") ? params.get("estado") : "--";
 
-      // Parametros para la tabla PROGRAMACION
-      var conductor = params.has("conductor") ? params.get("conductor") : "---";
-      var vehiculo = params.has("vehiculo") ? params.get("vehiculo") : "---";
-      var fechadespacho = params.has("fechadespacho")
+      // Parametros para la tabla PROGRAMACION (now treated as comma-separated)
+      var conductores = params.has("conductor") ? params.get("conductor") : ""; // Changed to plural and default empty
+      var vehiculos = params.has("vehiculo") ? params.get("vehiculo") : ""; // Changed to plural and default empty
+      var fechasdespacho = params.has("fechadespacho")
         ? params.get("fechadespacho")
-        : "---";
-      var horadespacho = params.has("horadespacho")
+        : ""; // Changed to plural and default empty
+      var horasdespacho = params.has("horadespacho")
         ? params.get("horadespacho")
-        : "---";
-      var horaentrega = params.has("horaentrega")
+        : ""; // Changed to plural and default empty
+      var horasentrega = params.has("horaentrega")
         ? params.get("horaentrega")
-        : "---";
+        : ""; // Changed to plural and default empty
 
       //Recibe los datos de los servicios (separados por comas) que van para la tabla1
       var cantidades1 = params.has("cantidades1")
@@ -159,7 +160,7 @@
         : ""; // Changed default to empty string for check
       var p_total3 = params.has("p_total3") ? params.get("p_total3") : ""; // Changed default to empty string for check
 
-      // Function to process and format data for a table
+      // Function to process and format data for a table (general purpose)
       function processTableData(cantidadesStr, descripcionesStr, preciosStr) {
         if (
           !cantidadesStr ||
@@ -191,10 +192,66 @@
         return result;
       }
 
+      // Function to process data for the PROGRAMACION table
+      function processProgramacionData(
+        conductoresStr,
+        vehiculosStr,
+        fechasDespachoStr,
+        horasDespachoStr,
+        horasEntregaStr
+      ) {
+        // Split all strings by comma
+        var conductores = conductoresStr.split(",");
+        var vehiculos = vehiculosStr.split(",");
+        var fechasDespacho = fechasDespachoStr.split(",");
+        var horasDespacho = horasDespachoStr.split(",");
+        var horasEntrega = horasEntregaStr.split(",");
+
+        var result = [];
+        // Determine the maximum length of the arrays
+        var maxLength = Math.max(
+          conductores.length,
+          vehiculos.length,
+          fechasDespacho.length,
+          horasDespacho.length,
+          horasEntrega.length
+        );
+
+        // If all input strings were empty, maxLength will be 1 due to split(""), but we want to return empty
+        if (
+          conductoresStr === "" &&
+          vehiculosStr === "" &&
+          fechasDespachoStr === "" &&
+          horasDespachoStr === "" &&
+          horasEntregaStr === ""
+        ) {
+          return [];
+        }
+
+        for (let i = 0; i < maxLength; i++) {
+          // Add data for each row, using "---" if data is missing for a specific index
+          result.push({
+            fechaCargue: fechasDespacho[i] || "---",
+            horaCargue: horasDespacho[i] || "---",
+            vehiculoInfo: vehiculos[i] || "---",
+            conductorInfo: conductores[i] || "---",
+            horaEntrega: horasEntrega[i] || "---",
+          });
+        }
+        return result;
+      }
+
       // Process data for each table
       var result1 = processTableData(cantidades1, descripciones1, p_total1);
       var result2 = processTableData(cantidades2, descripciones2, p_total2);
       var result3 = processTableData(cantidades3, descripciones3, p_total3);
+      var resultProgramacion = processProgramacionData(
+        conductores,
+        vehiculos,
+        fechasdespacho,
+        horadespacho,
+        horasentrega
+      );
 
       // Formato de 0 decimales para los totales
       total = parseFloat(total).toLocaleString("es-ES", {
@@ -203,17 +260,17 @@
     </script>
     <div id="thermal-pos">
       <div class="label">
-        <br />
-        <br />
         <p class="info-tienda">
-          Bodega Reina Local 288
           <br />
+          BODEGA REINA LOCAL 288
         </p>
       </div>
 
       <div class="label">
         <b>TICKET:</b>
         <h1 class="nro_boleta" id="nro_boleta_id"></h1>
+        <p><b>TIPO DE DOCUMENTO</b></p>
+        <h1 class="nro_boleta" id="tipoDocumento"></h1>
       </div>
       <div class="label">
         <p class="fecha_recepcion">
@@ -296,17 +353,9 @@
 
       <table class="table">
         <tbody class="table-footer">
-          <tr>
-            <td colspan="2"><h2>EFECTIVO:</h2></td>
-            <td colspan="2"><h2 id="efectivo"></h2></td>
-          </tr>
           <tr class="top-line">
             <td class="" colspan="2"><h2>TOTAL:</h2></td>
             <td colspan="2"><h2 id="total"></h2></td>
-          </tr>
-          <tr>
-            <td colspan="2"><h2>DEVUELTAS:</h2></td>
-            <td colspan="2"><h2 id="devueltas"></h2></td>
           </tr>
         </tbody>
       </table>
@@ -350,31 +399,56 @@
         }
       </script>
 
-      <div class="section-title">PROGRAMACION</div>
-      <table class="table" id="tablaProgramacion">
-        <tbody>
-          <tr>
-            <td>FECHA DE CARGUE</td>
-            <td id="fechaCargue"></td>
-          </tr>
-          <tr>
-            <td>HORA DE CARGUE</td>
-            <td id="horaCargue"></td>
-          </tr>
-          <tr>
-            <td>VEHICULO</td>
-            <td id="vehiculoInfo"></td>
-          </tr>
-          <tr>
-            <td>CONDUCTOR</td>
-            <td id="conductorInfo"></td>
-          </tr>
-          <tr>
-            <td>HORA DE ENTREGA</td>
-            <td id="horaEntrega"></td>
-          </tr>
-        </tbody>
-      </table>
+      <script>
+        // Check if there is data for the PROGRAMACION table before rendering
+        if (resultProgramacion.length > 0) {
+          document.write(`
+                <div class="section-title">PROGRAMACION</div>
+                <table class="table" id="tablaProgramacion">
+                    <tbody id="tablaBodyProgramacion">
+                        </tbody>
+                </table>
+            `);
+
+          // Populate PROGRAMACION table body
+          var tablaBodyProgramacion = document.getElementById(
+            "tablaBodyProgramacion"
+          );
+          resultProgramacion.forEach(function (row) {
+            var newRowFecha = document.createElement("tr");
+            newRowFecha.innerHTML = `<td>FECHA DE CARGUE</td><td>${row.fechaCargue}</td>`;
+            tablaBodyProgramacion.appendChild(newRowFecha);
+
+            var newRowHoraCargue = document.createElement("tr");
+            newRowHoraCargue.innerHTML = `<td>HORA DE CARGUE</td><td>${row.horaCargue}</td>`;
+            tablaBodyProgramacion.appendChild(newRowHoraCargue);
+
+            var newRowVehiculo = document.createElement("tr");
+            newRowVehiculo.innerHTML = `<td>VEHICULO</td><td>${row.vehiculoInfo}</td>`;
+            tablaBodyProgramacion.appendChild(newRowVehiculo);
+
+            var newRowConductor = document.createElement("tr");
+            newRowConductor.innerHTML = `<td>CONDUCTOR</td><td>${row.conductorInfo}</td>`;
+            tablaBodyProgramacion.appendChild(newRowConductor);
+
+            var newRowHoraEntrega = document.createElement("tr");
+            newRowHoraEntrega.innerHTML = `<td>HORA DE ENTREGA</td><td>${row.horaEntrega}</td>`;
+            tablaBodyProgramacion.appendChild(newRowHoraEntrega);
+
+            // Add a space row after each set of programacion details
+            var spaceRow = document.createElement("tr");
+            spaceRow.innerHTML = `<td colspan="2">&nbsp;</td>`;
+            tablaBodyProgramacion.appendChild(spaceRow);
+          });
+          // Remove the last space row if it exists
+          if (
+            resultProgramacion.length > 0 &&
+            tablaBodyProgramacion.lastChild.innerHTML.includes("&nbsp;")
+          ) {
+            tablaBodyProgramacion.removeChild(tablaBodyProgramacion.lastChild);
+          }
+        }
+      </script>
 
       <br />
       <p class="saldo-text">
@@ -388,21 +462,19 @@
         "nro_boleta_id"
       ).textContent = nro_boleta);
 
+      // Populate TIPO DE DOCUMENTO
+      document.getElementById("tipoDocumento").textContent = documento;
+
       var fechaElement = (document.getElementById("fechaR").textContent =
         fecha);
-      // Removed fecha_entregaElement assignment
 
       var totalElement = (document.getElementById("total").textContent = total);
-      // Removed subtotal_descElement and descuentoElement assignments
+
       var estadoElement = (document.getElementById("estado").textContent =
         estado);
 
-      // Populate PROGRAMACION table
-      document.getElementById("fechaCargue").textContent = fechadespacho;
-      document.getElementById("horaCargue").textContent = horadespacho;
-      document.getElementById("vehiculoInfo").textContent = vehiculo;
-      document.getElementById("conductorInfo").textContent = conductor;
-      document.getElementById("horaEntrega").textContent = horaentrega;
+      // The PROGRAMACION table is now populated dynamically by the script block above it.
+      // Removed the previous static population code.
     </script>
   </body>
 </html>
