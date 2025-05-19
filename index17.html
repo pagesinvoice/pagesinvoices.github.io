@@ -110,6 +110,7 @@
 
       // Obtener los valores de los parámetros
       var nro_boleta = params.has("boleta") ? params.get("boleta") : "---";
+      var cliente = params.has("cliente") ? params.get("cliente") : "---";
       var documento = params.has("documento") ? params.get("documento") : "---"; // Added documento parameter
 
       var fecha = params.has("fecha")
@@ -272,6 +273,8 @@
         <h1 class="nro_boleta" id="nro_boleta_id"></h1>
         <b>TIPO DE DOCUMENTO</b>
         <h1 class="nro_boleta" id="tipoDocumento"></h1>
+        <b>CLIENTE:</b>
+        <h1 class="nro_boleta" id="cliente"></h1>
       </div>
       <div class="label">
         <p class="fecha_recepcion">
@@ -468,6 +471,9 @@
 
       var fechaElement = (document.getElementById("fechaR").textContent =
         fecha);
+
+      var clienteElement = (document.getElementById("cliente").textContent =
+        cliente);
 
       var totalElement = (document.getElementById("total").textContent = total);
 
