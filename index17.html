@@ -70,9 +70,6 @@
         margin: 0;
         padding: 0;
       }
-      .nro_mesa {
-        margin: 0;
-      }
       .fecha_recepcion {
         margin: 0;
       }
@@ -113,67 +110,95 @@
 
       // Obtener los valores de los parámetros
       var nro_boleta = params.has("boleta") ? params.get("boleta") : "---";
-      var nro_mesa = params.has("mesa") ? params.get("mesa") : "---";
-      var direc = params.has("direccion") ? params.get("direccion") : "---";
 
       var fecha = params.has("fecha")
         ? params.get("fecha")
         : "dd/mm/aaaa hh:mm:ss";
-      var fecha_entrega = params.has("fecha_entrega")
-        ? params.get("fecha_entrega")
-        : "hh:mm:ss";
-      var domi = params.has("domi") ? params.get("domi") : "N/A";
-      var propina = params.has("propina") ? params.get("propina") : "N/A";
 
       var total = params.has("total") ? params.get("total") : "";
-      var subtotal_desc = params.has("subtotal_desc")
-        ? params.get("subtotal_desc")
-        : " ";
-      var descuento = params.has("descuento") ? params.get("descuento") : " ";
+
       var estado = params.has("estado") ? params.get("estado") : "--";
 
-      //Recibe los datos de los servicios (separados por comas)
-      var cantidades = params.has("cantidades")
-        ? params.get("cantidades")
-        : "0";
-      var descripciones = params.has("servicios")
-        ? params.get("servicios")
-        : "No hay articulos";
-      var p_units = params.has("p_unit") ? params.get("p_unit") : "0.00";
+      // Parametros para la tabla PROGRAMACION
+      var conductor = params.has("conductor") ? params.get("conductor") : "---";
+      var vehiculo = params.has("vehiculo") ? params.get("vehiculo") : "---";
+      var fechadespacho = params.has("fechadespacho")
+        ? params.get("fechadespacho")
+        : "---";
+      var horadespacho = params.has("horadespacho")
+        ? params.get("horadespacho")
+        : "---";
+      var horaentrega = params.has("horaentrega")
+        ? params.get("horaentrega")
+        : "---";
 
-      //Formato de 2 decimales
-      propina = parseFloat(propina).toLocaleString("es-ES", {
-        minimumFractionDigits: 0,
-      });
-      domi = parseFloat(domi).toLocaleString("es-ES", {
-        minimumFractionDigits: 0,
-      });
+      //Recibe los datos de los servicios (separados por comas) que van para la tabla1
+      var cantidades1 = params.has("cantidades1")
+        ? params.get("cantidades1")
+        : ""; // Changed default to empty string for check
+      var descripciones1 = params.has("servicios1")
+        ? params.get("servicios1")
+        : ""; // Changed default to empty string for check
+      var p_total1 = params.has("p_total1") ? params.get("p_total1") : ""; // Changed default to empty string for check
+
+      //Recibe los datos de los servicios (separados por comas) que van para la tabla2
+      var cantidades2 = params.has("cantidades2")
+        ? params.get("cantidades2")
+        : ""; // Changed default to empty string for check
+      var descripciones2 = params.has("servicios2")
+        ? params.get("servicios2")
+        : ""; // Changed default to empty string for check
+      var p_total2 = params.has("p_total2") ? params.get("p_total2") : ""; // Changed default to empty string for check
+
+      //Recibe los datos de los servicios (separados por comas) que van para la tabla3
+      var cantidades3 = params.has("cantidades3")
+        ? params.get("cantidades3")
+        : ""; // Changed default to empty string for check
+      var descripciones3 = params.has("servicios3")
+        ? params.get("servicios3")
+        : ""; // Changed default to empty string for check
+      var p_total3 = params.has("p_total3") ? params.get("p_total3") : ""; // Changed default to empty string for check
+
+      // Function to process and format data for a table
+      function processTableData(cantidadesStr, descripcionesStr, preciosStr) {
+        if (
+          !cantidadesStr ||
+          !descripcionesStr ||
+          !preciosStr ||
+          cantidadesStr.split(",").length === 0
+        ) {
+          return []; // Return empty array if data is missing or empty
+        }
+
+        var cantidades = cantidadesStr.split(",");
+        var descripciones = descripcionesStr.split(",");
+        var precios = preciosStr.split(",");
+        var result = [];
+
+        for (let i = 0; i < cantidades.length; i++) {
+          // Ensure indices exist in all arrays
+          if (i < descripciones.length && i < precios.length) {
+            // Use parseFloat and toLocaleString for formatting price
+            result.push({
+              cantidad: cantidades[i],
+              descripcion: descripciones[i],
+              precio: parseFloat(precios[i]).toLocaleString("es-ES", {
+                minimumFractionDigits: 0,
+              }),
+            });
+          }
+        }
+        return result;
+      }
+
+      // Process data for each table
+      var result1 = processTableData(cantidades1, descripciones1, p_total1);
+      var result2 = processTableData(cantidades2, descripciones2, p_total2);
+      var result3 = processTableData(cantidades3, descripciones3, p_total3);
+
+      // Formato de 0 decimales para los totales
       total = parseFloat(total).toLocaleString("es-ES", {
         minimumFractionDigits: 0,
-      });
-      descuento = parseFloat(descuento).toLocaleString("es-ES", {
-        minimumFractionDigits: 0,
-      });
-      subtotal_desc = parseFloat(subtotal_desc).toLocaleString("es-ES", {
-        minimumFractionDigits: 0,
-      });
-
-      //crea una lista de cada columna a partir de las comas.
-      cantidades = cantidades.split(",");
-      descripciones = descripciones.split(",");
-      p_units = p_units.split(",");
-
-      //Crea una lista para mostrar en cada fila de la tabla
-      var result = [];
-
-      cantidades.forEach(function (value, id) {
-        result[id] = {
-          cantidad: cantidades[id],
-          descripcion: descripciones[id], // + " " + detalles[id], // Descomenta si deseas concatenar la descripción con el detalle
-          precio_unit: parseFloat(p_units[id]).toLocaleString("es-ES", {
-            minimumFractionDigits: 0,
-          }),
-        };
       });
     </script>
     <div id="thermal-pos">
@@ -181,9 +206,7 @@
         <br />
         <br />
         <p class="info-tienda">
-          Nit:
-          <br />
-          Domicilios 304 4430427 / Mistares Etapa 2 Frente Bourboun
+          Bodega Reina Local 288
           <br />
         </p>
       </div>
@@ -191,8 +214,6 @@
       <div class="label">
         <b>TICKET:</b>
         <h1 class="nro_boleta" id="nro_boleta_id"></h1>
-        <h1 class="nro_mesa" id="nro_mesa_id"></h1>
-        <h3 class="direccion" id="nro_direccion_id"></h3>
       </div>
       <div class="label">
         <p class="fecha_recepcion">
@@ -204,57 +225,74 @@
       </div>
 
       <table class="table">
-        <tbody id="tablaBody">
+        <tbody id="tablaBody1">
           <tr class="table-header">
             <th><h2>Cant</h2></th>
             <th><h2>Producto</h2></th>
             <th><h2>Total</h2></th>
           </tr>
           <script>
-            /*var result = [
-                        { cantidad: 3, descripcion: "hamburguesa doble carne", precio_unit: 10000 },
-                        { cantidad: 5, descripcion: "Perro mas gaseosa y de todo", precio_unit: 20000 },
-                        // ... otros objetos en el array
-                    ];*/
+            var tablaBody1 = document.getElementById("tablaBody1");
 
-            var tablaBody = document.getElementById("tablaBody");
-
-            result.forEach(function (row) {
+            result1.forEach(function (row) {
               var newRow = document.createElement("tr");
               newRow.className = "table-item";
 
               newRow.innerHTML = `
-                        <td class="item">${row.cantidad}</td>
-                        <td class="item">${row.descripcion}</td>
-                        <td class="item">${row.precio_unit}</td>
-                    `;
-              tablaBody.appendChild(newRow);
+                <td class="item">${row.cantidad}</td>
+                <td class="item">${row.descripcion}</td>
+                <td class="item">${row.precio}</td>
+              `;
+              tablaBody1.appendChild(newRow);
             });
-            // Agrega una fila adicional con un espacio
-            var spaceRow = document.createElement("tr");
-            spaceRow.innerHTML = `<td colspan="3">&nbsp;</td>`;
-            tablaBody.appendChild(spaceRow);
+            // Agrega una fila adicional con un espacio si hay datos
+            if (result1.length > 0) {
+              var spaceRow = document.createElement("tr");
+              spaceRow.innerHTML = `<td colspan="3">&nbsp;</td>`;
+              tablaBody1.appendChild(spaceRow);
+            }
           </script>
         </tbody>
       </table>
 
-      <div class="section-title">COMO SE FACTURA</div>
-      <table class="table">
-        <thead>
-          <tr>
-            <th><h2>Cant</h2></th>
-            <th><h2>Producto</h2></th>
-            <th><h2>Precio</h2></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
+      <script>
+        // Check if there is data for table 2 before rendering
+        if (result2.length > 0) {
+          document.write(`
+            <div class="section-title">COMO SE FACTURA</div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th><h2>Cant</h2></th>
+                  <th><h2>Producto</h2></th>
+                  <th><h2>Precio</h2></th>
+                </tr>
+              </thead>
+              <tbody id="tablaBody2">
+                </tbody>
+            </table>
+          `);
+
+          // Populate table 2 body
+          var tablaBody2 = document.getElementById("tablaBody2");
+          result2.forEach(function (row) {
+            var newRow = document.createElement("tr");
+            newRow.className = "table-item";
+            newRow.innerHTML = `
+              <td class="item">${row.cantidad}</td>
+              <td class="item">${row.descripcion}</td>
+              <td class="item">${row.precio}</td>
+            `;
+            tablaBody2.appendChild(newRow);
+          });
+          // Add a space row if there is data
+          if (result2.length > 0) {
+            var spaceRow = document.createElement("tr");
+            spaceRow.innerHTML = `<td colspan="3">&nbsp;</td>`;
+            tablaBody2.appendChild(spaceRow);
+          }
+        }
+      </script>
 
       <table class="table">
         <tbody class="table-footer">
@@ -272,47 +310,68 @@
           </tr>
         </tbody>
       </table>
-      <div class="section-title">MATERIAS PRIMAS</div>
-      <table class="table">
-        <thead>
-          <tr>
-            <th><h2>Cant</h2></th>
-            <th><h2>Producto</h2></th>
-            <th><h2>Total</h2></th>
-          </tr>
-        </thead>
 
-        <tbody>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
+      <script>
+        // Check if there is data for table 3 before rendering
+        if (result3.length > 0) {
+          document.write(`
+            <div class="section-title">MATERIAS PRIMAS</div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th><h2>Cant</h2></th>
+                  <th><h2>Producto</h2></th>
+                  <th><h2>Total</h2></th>
+                </tr>
+              </thead>
+              <tbody id="tablaBody3">
+                </tbody>
+            </table>
+          `);
+
+          // Populate table 3 body
+          var tablaBody3 = document.getElementById("tablaBody3");
+          result3.forEach(function (row) {
+            var newRow = document.createElement("tr");
+            newRow.className = "table-item";
+            newRow.innerHTML = `
+              <td class="item">${row.cantidad}</td>
+              <td class="item">${row.descripcion}</td>
+              <td class="item">${row.precio}</td>
+            `;
+            tablaBody3.appendChild(newRow);
+          });
+          // Add a space row if there is data
+          if (result3.length > 0) {
+            var spaceRow = document.createElement("tr");
+            spaceRow.innerHTML = `<td colspan="3">&nbsp;</td>`;
+            tablaBody3.appendChild(spaceRow);
+          }
+        }
+      </script>
 
       <div class="section-title">PROGRAMACION</div>
-      <table class="table">
+      <table class="table" id="tablaProgramacion">
         <tbody>
           <tr>
             <td>FECHA DE CARGUE</td>
-            <td></td>
+            <td id="fechaCargue"></td>
           </tr>
           <tr>
             <td>HORA DE CARGUE</td>
-            <td></td>
+            <td id="horaCargue"></td>
           </tr>
           <tr>
             <td>VEHICULO</td>
-            <td></td>
+            <td id="vehiculoInfo"></td>
           </tr>
           <tr>
             <td>CONDUCTOR</td>
-            <td></td>
+            <td id="conductorInfo"></td>
           </tr>
           <tr>
             <td>HORA DE ENTREGA</td>
-            <td></td>
+            <td id="horaEntrega"></td>
           </tr>
         </tbody>
       </table>
@@ -328,46 +387,22 @@
       var nroBoletaElement = (document.getElementById(
         "nro_boleta_id"
       ).textContent = nro_boleta);
-      var nroMesaElement = (document.getElementById("nro_mesa_id").textContent =
-        nro_mesa);
-      var nroDireccion = (document.getElementById(
-        "nro_direccion_id"
-      ).textContent = direc);
 
       var fechaElement = (document.getElementById("fechaR").textContent =
         fecha);
-      var fecha_entregaElement = (document.getElementById("hora").textContent =
-        fecha_entrega);
+      // Removed fecha_entregaElement assignment
 
-      /*const propinaCell = document.getElementById("propinaCell");
-        var propinaElement = document.getElementById("propina");
-                    // Verifica si domi es igual a "N/A"
-            if (propina == "NaN") {
-                    // Si domi es "N/A", oculta el elemento <td> que contiene la etiqueta y el valor
-                propinaCell.style.display = "none";
-            } else {
-             // Si domi no es "N/A", muestra el valor en el elemento <h2>
-             propinaElement.textContent = propina;
-            }
-
-        const domicilioCell = document.getElementById("domicilioCell");
-        var domiElement = document.getElementById("domi");
-                    // Verifica si domi es igual a "N/A"
-            if (domi == "NaN") {
-                    // Si domi es "N/A", oculta el elemento <td> que contiene la etiqueta y el valor
-                domicilioCell.style.display = "none";
-            } else {
-             // Si domi no es "N/A", muestra el valor en el elemento <h2>
-             domiElement.textContent = domi;
-            }       */
       var totalElement = (document.getElementById("total").textContent = total);
-      var subtotal_descElement = (document.getElementById(
-        "efectivo"
-      ).textContent = descuento);
-      var descuentoElement = (document.getElementById("devueltas").textContent =
-        subtotal_desc);
+      // Removed subtotal_descElement and descuentoElement assignments
       var estadoElement = (document.getElementById("estado").textContent =
         estado);
+
+      // Populate PROGRAMACION table
+      document.getElementById("fechaCargue").textContent = fechadespacho;
+      document.getElementById("horaCargue").textContent = horadespacho;
+      document.getElementById("vehiculoInfo").textContent = vehiculo;
+      document.getElementById("conductorInfo").textContent = conductor;
+      document.getElementById("horaEntrega").textContent = horaentrega;
     </script>
   </body>
 </html>
