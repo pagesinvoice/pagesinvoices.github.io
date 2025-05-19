@@ -112,6 +112,7 @@
       var nro_boleta = params.has("boleta") ? params.get("boleta") : "---";
       var cliente = params.has("cliente") ? params.get("cliente") : "---";
       var documento = params.has("documento") ? params.get("documento") : "---"; // Added documento parameter
+      var nota = params.has("nota") ? params.get("nota") : "---";
 
       var fecha = params.has("fecha")
         ? params.get("fecha")
@@ -455,11 +456,11 @@
         }
       </script>
 
-      <br />
       <p class="saldo-text">
         <b><span class="estado-deuda" id="estado"></span></b>
       </p>
       <div class="note-container">NOTA</div>
+      <div id="nota"></div>
     </div>
 
     <script>
@@ -475,6 +476,8 @@
 
       var clienteElement = (document.getElementById("cliente").textContent =
         cliente);
+
+      var notaElement = (document.getElementById("nota").textContent = nota);
 
       var totalElement = (document.getElementById("total").textContent = total);
 
