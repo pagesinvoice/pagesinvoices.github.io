@@ -86,8 +86,8 @@
 
       .section-title {
         text-align: center;
-        margin-top: 5mm;
-        margin-bottom: 2mm;
+        margin-top: none;
+        margin-bottom: none;
         font-size: 3.5mm;
         font-weight: bold;
       }
@@ -291,7 +291,7 @@
           <tr class="table-header">
             <th><h2>Cant</h2></th>
             <th><h2>Producto</h2></th>
-            <th><h2>Total</h2></th>
+            <th><h2>P.unit</h2></th>
           </tr>
           <script>
             var tablaBody1 = document.getElementById("tablaBody1");
@@ -324,10 +324,10 @@
             <div class="section-title">COMO SE FACTURA</div>
             <table class="table">
               <thead>
-                <tr>
+                <tr class="table-header">
                   <th><h2>Cant</h2></th>
                   <th><h2>Producto</h2></th>
-                  <th><h2>Precio</h2></th>
+                  <th><h2>P.unit</h2></th>
                 </tr>
               </thead>
               <tbody id="tablaBody2">
@@ -364,7 +364,7 @@
           </tr>
         </tbody>
       </table>
-
+      <br />
       <script>
         // Check if there is data for table 3 before rendering
         if (result3.length > 0) {
@@ -372,10 +372,10 @@
             <div class="section-title">MATERIAS PRIMAS</div>
             <table class="table">
               <thead>
-                <tr>
+                <tr class="table-header">
                   <th><h2>Cant</h2></th>
                   <th><h2>Producto</h2></th>
-                  <th><h2>Total</h2></th>
+                  <th><h2>P.unit</h2></th>
                 </tr>
               </thead>
               <tbody id="tablaBody3">
