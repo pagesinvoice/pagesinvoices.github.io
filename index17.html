@@ -250,20 +250,21 @@
         conductores,
         vehiculos,
         fechasdespacho,
-        horadespacho,
+        horasdespacho,
         horasentrega
       );
 
-      // Formato de 0 decimales para los totales
-      total = parseFloat(total).toLocaleString("es-ES", {
+      total = `$${parseFloat(total).toLocaleString("es-ES", {
         minimumFractionDigits: 0,
-      });
+        maximumFractionDigits: 0,
+      })}`;
     </script>
     <div id="thermal-pos">
       <div class="label">
         <p class="info-tienda">
           <br />
           BODEGA REINA LOCAL 288
+          <br />
           <br />
         </p>
       </div>
