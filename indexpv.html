@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=60mm, initial-scale=1.0">
+    <title>Ticket de Compra</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+            font-size: 2.8mm;
+            background: white;
+            color: black;
+        }
+
+        #thermal-pos {
+            margin: 0;
+            max-width: 60mm;
+            padding: 1mm;
+        }
+
+        /* Header exacto como la imagen */
+        .store-header {
+            text-align: center;
+            margin-bottom: 2mm;
+        }
+
+        .store-title {
+            font-size: 4mm;
+            font-weight: bold;
+            margin: 1mm 0;
+            letter-spacing: 0.5mm;
+            line-height: 1.0;
+        }
+
+        .store-subtitle {
+            font-size: 4mm;
+            font-weight: bold;
+            margin: 0;
+            letter-spacing: 0.5mm;
+        }
+
+        .store-details {
+            font-size: 2.5mm;
+            margin: 0.5mm 0;
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        /* Tabla exacta como la imagen */
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2mm 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .products-table th {
+            font-size: 2.8mm;
+            font-weight: bold;
+            text-align: left;
+            padding: 0.5mm 0.2mm;
+            border-bottom: 1px solid #000;
+        }
+
+        .products-table td {
+            font-size: 2.5mm;
+            padding: 0.2mm 0.2mm;
+            text-align: left;
+            line-height: 1.0;
+        }
+
+        /* Anchos de columnas exactos como la imagen */
+        .qty-col { width: 6mm; text-align: right; }
+        .upc-col { width: 18mm; }
+        .desc-col { width: 20mm; }
+        .total-col { width: 12mm; text-align: right; }
+
+        /* Sección de totales */
+        .totals-section {
+            margin: 1mm 0;
+            font-size: 2.5mm;
+            font-family: 'Courier New', monospace;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.5mm 0;
+            padding: 0.2mm 0;
+        }
+
+        .total-row.bold {
+            font-weight: bold;
+        }
+
+        /* Footer */
+        .footer-section {
+            text-align: center;
+            margin-top: 3mm;
+            font-size: 2.5mm;
+        }
+
+        .thanks-message {
+            font-weight: bold;
+            margin: 2mm 0;
+        }
+
+        /* Mantener compatibilidad con código original */
+        .label {
+            margin: 0;
+            margin-left: 0.5mm;
+        }
+
+        .saldo-text {
+            margin: 1mm 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .policy {
+            margin-left: 0.5mm;
+            text-align: center;
+            font-size: 2.2mm;
+        }
+
+        .m-0 {
+            margin: 0;
+        }
+
+        /* Ocultar elementos no utilizados */
+        .nro_mesa, .direccion {
+            display: none;
+        }
+    </style>
+  </head>
+  <body onload="window.print()" onfocus="window.close()">
+
+    <script>
+        // Obtener los parámetros de la URL
+        const params = new URLSearchParams(window.location.search);
+
+        // Obtener los valores de los parámetros
+        var nro_boleta = params.has('boleta') ? params.get('boleta') : "627541513";
+        var nro_mesa = params.has('mesa') ? params.get('mesa') : "---";
+        var direc = params.has('direccion') ? params.get('direccion') : "---";
+        
+        var fecha = params.has('fecha') ? params.get('fecha') : "8/4/2025";
+        var fecha_entrega = params.has('fecha_entrega') ? params.get('fecha_entrega') : "hh:mm:ss";
+        var domi = params.has('domi') ? params.get('domi') : "N/A";
+        var propina = params.has('propina') ? params.get('propina') : "N/A";
+
+        var total = params.has('total') ? params.get('total') : "229.50";
+        var subtotal_desc = params.has('subtotal_desc') ? params.get('subtotal_desc') : "229.50";
+        var descuento = params.has('descuento') ? params.get('descuento') : "325.38";
+        var estado = params.has('estado') ? params.get('estado') : "";
+
+        //Recibe los datos de los servicios (separados por comas)
+        var cantidades = params.has('cantidades') ? params.get('cantidades') : "16,64,8,8,6";
+        var descripciones = params.has('servicios') ? params.get('servicios') : "OATMEAL,HONEY BUNS,NUTTY BARS,PNB BAR,CUPCAKES";
+        var p_units = params.has('p_unit') ? params.get('p_unit') : "36.00,144.00,18.00,18.00,13.50";
+        
+        // NUEVA VARIABLE: Códigos UPC desde parámetros de URL
+        var upcs = params.has('upcs') ? params.get('upcs') : "2430004101,2430004102,2430004120,2430004128,2430004563";
+        
+        //Formato de 2 decimales
+        propina = parseFloat(propina).toLocaleString('es-ES', { minimumFractionDigits: 2 });
+        domi = parseFloat(domi).toLocaleString('es-ES', { minimumFractionDigits: 2 });
+        total = parseFloat(total).toLocaleString('es-ES', { minimumFractionDigits: 2 });
+        descuento = parseFloat(descuento).toLocaleString('es-ES', { minimumFractionDigits: 2 });
+        subtotal_desc = parseFloat(subtotal_desc).toLocaleString('es-ES', { minimumFractionDigits: 2 });
+        
+        //crea una lista de cada columna a partir de las comas.
+        cantidades = cantidades.split(",");
+        descripciones = descripciones.split(","); 
+        p_units = p_units.split(",");
+        upcs = upcs.split(","); // Nueva línea: dividir UPCs por comas
+
+        //Crea una lista para mostrar en cada fila de la tabla
+        var result = [];
+        var totalUnidades = 0;
+
+        cantidades.forEach(function(value, id) {
+            totalUnidades += parseInt(cantidades[id]) || 0;
+            result[id] = {
+                cantidad: cantidades[id],
+                upc: upcs[id] || ("243000410" + (id + 1)), // Usar UPC de parámetro o generar automático
+                descripcion: descripciones[id],
+                precio_unit: parseFloat(p_units[id]).toFixed(2),
+            };
+        });
+    </script>
+
+    <div id="thermal-pos">
+        
+        <!-- Header exacto como la imagen -->
+        <div class="store-header">
+            <div class="store-title">SUPERMERCADO LA</div>
+            <div class="store-subtitle">ECONÓMICA</div>
+            <div class="store-details">
+                <div>RNC: 1-01-12345-6</div>
+                <div>Calle Duarte #45, Puerto Plata</div>
+                <div>Tel: (809) 555-1234</div>
+                <div>Fecha: <span id="fecha_display"></span></div>
+                <div>Factura No.: <span id="factura_no"></span></div>
+            </div>
+        </div>
+
+        <!-- Tabla de productos exacta como la imagen -->
+        <table class="products-table">
+            <thead>
+                <tr>
+                    <th class="qty-col">QTY</th>
+                    <th class="upc-col">UPC</th>
+                    <th class="desc-col">DESCRIPCION</th>
+                    <th class="total-col">TOTAL</th>
+                </tr>
+            </thead>
+            <tbody id="products-tbody">
+                <!-- Productos se insertan aquí dinámicamente -->
+            </tbody>
+        </table>
+
+        <!-- Totales exactos como la imagen -->
+        <div class="totals-section">
+            <div class="total-row">
+                <span>Total Unidades</span>
+                <span id="total_units_display"></span>
+            </div>
+            <div class="total-row">
+                <span>Subtotal</span>
+                <span>$<span id="subtotal_display"></span></span>
+            </div>
+            <div class="total-row">
+                <span>Total Retail</span>
+                <span>$<span id="retail_display"></span></span>
+            </div>
+            <div class="total-row bold">
+                <span>TOTAL A PAGAR</span>
+                <span>$<span id="total_display"></span></span>
+            </div>
+        </div>
+
+        <!-- Footer como la imagen -->
+        <div class="footer-section">
+            <div class="thanks-message">Gracias por su compra</div>
+        </div>
+
+        <!-- Sección de estado (para compatibilidad) -->
+        <div class="saldo-text">
+            <span id="estado"></span>
+        </div>
+
+        <!-- Información adicional -->
+        <div class="policy">
+            <p><b>IMPORTANTE:</b></p>
+            <p class="m-0">
+               Facturas AutoSystem<br/>
+               Contactos: +57 315 820 8619<br/>
+               Siguenos en redes sociales como @AutoSystem
+            </p>
+        </div>
+
+        <!-- Elementos ocultos para compatibilidad -->
+        <div class="label" style="display: none;">
+            <h1 class="nro_mesa" id="nro_mesa_id"></h1>
+            <h3 class="direccion" id="nro_direccion_id"></h3>
+        </div>
+
+    </div>
+
+    <script>
+        // Llenar header
+        document.getElementById("fecha_display").textContent = fecha;
+        document.getElementById("factura_no").textContent = nro_boleta;
+
+        // Llenar productos dinámicamente
+        var productsTbody = document.getElementById("products-tbody");
+        
+        result.forEach(function(row) {
+            var newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <td class="qty-col">${row.cantidad}</td>
+                <td class="upc-col">${row.upc}</td>
+                <td class="desc-col">${row.descripcion}</td>
+                <td class="total-col">$${row.precio_unit}</td>
+            `;
+            productsTbody.appendChild(newRow);
+        });
+
+        // Llenar totales
+        document.getElementById("total_units_display").textContent = totalUnidades;
+        document.getElementById("subtotal_display").textContent = subtotal_desc;
+        document.getElementById("retail_display").textContent = descuento;
+        document.getElementById("total_display").textContent = total;
+        
+        // Estado (para compatibilidad)
+        document.getElementById("estado").textContent = estado;
+
+        // Asignar valores a elementos ocultos para compatibilidad
+        if (document.getElementById("nro_mesa_id")) {
+            document.getElementById("nro_mesa_id").textContent = nro_mesa;
+        }
+        if (document.getElementById("nro_direccion_id")) {
+            document.getElementById("nro_direccion_id").textContent = direc;
+        }
+    </script>
+
+  </body>
+</html>
