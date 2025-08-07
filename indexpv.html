@@ -162,21 +162,21 @@
         var descripciones = params.has('servicios') ? params.get('servicios') : "OATMEAL,HONEY BUNS,NUTTY BARS,PNB BAR,CUPCAKES";
         var p_units = params.has('p_unit') ? params.get('p_unit') : "36.00,144.00,18.00,18.00,13.50";
         
-        // NUEVA VARIABLE: Códigos UPC desde parámetros de URL
+        // Códigos UPC desde parámetros de URL
         var upcs = params.has('upcs') ? params.get('upcs') : "2430004101,2430004102,2430004120,2430004128,2430004563";
         
-        //Formato de 2 decimales
-        propina = parseFloat(propina).toLocaleString('es-ES', { minimumFractionDigits: 2 });
-        domi = parseFloat(domi).toLocaleString('es-ES', { minimumFractionDigits: 2 });
-        total = parseFloat(total).toLocaleString('es-ES', { minimumFractionDigits: 2 });
-        descuento = parseFloat(descuento).toLocaleString('es-ES', { minimumFractionDigits: 2 });
-        subtotal_desc = parseFloat(subtotal_desc).toLocaleString('es-ES', { minimumFractionDigits: 2 });
+        //Formato USD con 2 decimales
+        propina = parseFloat(propina).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        domi = parseFloat(domi).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        total = parseFloat(total).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        descuento = parseFloat(descuento).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        subtotal_desc = parseFloat(subtotal_desc).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         
         //crea una lista de cada columna a partir de las comas.
         cantidades = cantidades.split(",");
         descripciones = descripciones.split(","); 
         p_units = p_units.split(",");
-        upcs = upcs.split(","); // Nueva línea: dividir UPCs por comas
+        upcs = upcs.split(",");
 
         //Crea una lista para mostrar en cada fila de la tabla
         var result = [];
@@ -186,9 +186,9 @@
             totalUnidades += parseInt(cantidades[id]) || 0;
             result[id] = {
                 cantidad: cantidades[id],
-                upc: upcs[id] || ("243000410" + (id + 1)), // Usar UPC de parámetro o generar automático
+                upc: upcs[id] || ("243000410" + (id + 1)),
                 descripcion: descripciones[id],
-                precio_unit: parseFloat(p_units[id]).toFixed(2),
+                precio_unit: parseFloat(p_units[id]).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
             };
         });
     </script>
