@@ -139,12 +139,6 @@
       .m-0 {
         margin: 0;
       }
-
-      /* Ocultar elementos no utilizados */
-      .nro_mesa,
-      .direccion {
-        display: none;
-      }
     </style>
   </head>
   <body onload="window.print()" onfocus="window.close()">
@@ -156,8 +150,8 @@
       var nro_boleta = params.has("boleta")
         ? params.get("boleta")
         : "627541513";
-      var nro_mesa = params.has("mesa") ? params.get("mesa") : "---";
-      var direc = params.has("direccion") ? params.get("direccion") : "---";
+      var nro_mesa = params.has("mesa") ? params.get("mesa") : "";
+      var direc = params.has("direccion") ? params.get("direccion") : "";
 
       var fecha = params.has("fecha") ? params.get("fecha") : "8/4/2025";
       var fecha_entrega = params.has("fecha_entrega")
@@ -191,27 +185,37 @@
         ? params.get("upcs")
         : "2430004101,2430004102,2430004120,2430004128,2430004563";
 
-      //Formato USD con 2 decimales
-      propina = parseFloat(propina).toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
-      domi = parseFloat(domi).toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
-      total = parseFloat(total).toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
-      descuento = parseFloat(descuento).toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
-      subtotal_desc = parseFloat(subtotal_desc).toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
+      //Formato USD con 2 decimales (solo si es válido)
+      propina = isNaN(parseFloat(propina))
+        ? "0.00"
+        : parseFloat(propina).toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+      domi = isNaN(parseFloat(domi))
+        ? "0.00"
+        : parseFloat(domi).toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+      total = isNaN(parseFloat(total))
+        ? "0.00"
+        : parseFloat(total).toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+      descuento = isNaN(parseFloat(descuento))
+        ? "0.00"
+        : parseFloat(descuento).toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+      subtotal_desc = isNaN(parseFloat(subtotal_desc))
+        ? "0.00"
+        : parseFloat(subtotal_desc).toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
 
       //crea una lista de cada columna a partir de las comas.
       cantidades = cantidades.split(",");
@@ -229,10 +233,12 @@
           cantidad: cantidades[id],
           upc: upcs[id] || "243000410" + (id + 1),
           descripcion: descripciones[id],
-          precio_unit: parseFloat(p_units[id]).toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          }),
+          precio_unit: isNaN(parseFloat(p_units[id]))
+            ? "0.00"
+            : parseFloat(p_units[id]).toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }),
         };
       });
     </script>
@@ -247,8 +253,13 @@
           <div>Calle Duarte #45, Puerto Plata</div>
           <div>Tel: (809) 555-1234</div>
           <div>Fecha: <span id="fecha_display"></span></div>
-          <div>Cliente: <span id="cliente_nombre"></span></div>
           <div>Factura No.: <span id="factura_no"></span></div>
+          <div id="cliente_section" style="display: none">
+            Cliente: <span id="cliente_nombre"></span>
+          </div>
+          <div id="direccion_section" style="display: none">
+            Dirección: <span id="direccion_info"></span>
+          </div>
         </div>
       </div>
 
@@ -273,7 +284,14 @@
           <span>Total Unidades</span>
           <span id="total_units_display"></span>
         </div>
-
+        <div class="total-row">
+          <span>Subtotal</span>
+          <span>$<span id="subtotal_display"></span></span>
+        </div>
+        <div class="total-row">
+          <span>Total Retail</span>
+          <span>$<span id="retail_display"></span></span>
+        </div>
         <div class="total-row bold">
           <span>TOTAL A PAGAR</span>
           <span>$<span id="total_display"></span></span>
@@ -290,40 +308,73 @@
         <span id="estado"></span>
       </div>
 
-      <!-- Información del cliente -->
+      <!-- Información adicional -->
+      <div class="policy">
+        <p><b>IMPORTANTE:</b></p>
+        <p class="m-0">
+          Facturas AutoSystem<br />
+          Contactos: +57 315 820 8619<br />
+          Siguenos en redes sociales como @AutoSystem
+        </p>
+      </div>
     </div>
 
     <script>
+      // Función para verificar y llenar elementos de forma segura
+      function setTextContentSafely(elementId, content) {
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.textContent = content;
+        } else {
+          console.warn(`Element with ID '${elementId}' not found`);
+        }
+      }
+
       // Llenar header
-      document.getElementById("fecha_display").textContent = fecha;
-      document.getElementById("factura_no").textContent = nro_boleta;
+      setTextContentSafely("fecha_display", fecha);
+      setTextContentSafely("factura_no", nro_boleta);
+
+      // Mostrar cliente si viene en los parámetros
+      if (nro_mesa && nro_mesa !== "---" && nro_mesa !== "") {
+        setTextContentSafely("cliente_nombre", nro_mesa);
+        const clienteSection = document.getElementById("cliente_section");
+        if (clienteSection) {
+          clienteSection.style.display = "block";
+        }
+      }
+
+      // Mostrar dirección si viene en los parámetros
+      if (direc && direc !== "---" && direc !== "") {
+        setTextContentSafely("direccion_info", direc);
+        const direccionSection = document.getElementById("direccion_section");
+        if (direccionSection) {
+          direccionSection.style.display = "block";
+        }
+      }
 
       // Llenar productos dinámicamente
       var productsTbody = document.getElementById("products-tbody");
-
-      result.forEach(function (row) {
-        var newRow = document.createElement("tr");
-        newRow.innerHTML = `
-                <td class="qty-col">${row.cantidad}</td>
-                <td class="upc-col">${row.upc}</td>
-                <td class="desc-col">${row.descripcion}</td>
-                <td class="total-col">$${row.precio_unit}</td>
-            `;
-        productsTbody.appendChild(newRow);
-      });
+      if (productsTbody) {
+        result.forEach(function (row) {
+          var newRow = document.createElement("tr");
+          newRow.innerHTML = `
+                  <td class="qty-col">${row.cantidad}</td>
+                  <td class="upc-col">${row.upc}</td>
+                  <td class="desc-col">${row.descripcion}</td>
+                  <td class="total-col">$${row.precio_unit}</td>
+              `;
+          productsTbody.appendChild(newRow);
+        });
+      }
 
       // Llenar totales
-      document.getElementById("total_units_display").textContent =
-        totalUnidades;
-      document.getElementById("subtotal_display").textContent = subtotal_desc;
-      document.getElementById("retail_display").textContent = descuento;
-      document.getElementById("total_display").textContent = total;
+      setTextContentSafely("total_units_display", totalUnidades);
+      setTextContentSafely("subtotal_display", subtotal_desc);
+      setTextContentSafely("retail_display", descuento);
+      setTextContentSafely("total_display", total);
 
       // Estado (para compatibilidad)
-      document.getElementById("estado").textContent = estado;
-
-      // Llenar información del cliente
-      document.getElementById("cliente_nombre").textContent = nro_mesa;
+      setTextContentSafely("estado", estado);
     </script>
   </body>
 </html>
