@@ -247,6 +247,7 @@
           <div>Calle Duarte #45, Puerto Plata</div>
           <div>Tel: (809) 555-1234</div>
           <div>Fecha: <span id="fecha_display"></span></div>
+          <div>Cliente: <span id="cliente_info"></span></div>
           <div>Factura No.: <span id="factura_no"></span></div>
         </div>
       </div>
@@ -272,14 +273,7 @@
           <span>Total Unidades</span>
           <span id="total_units_display"></span>
         </div>
-        <div class="total-row">
-          <span>Subtotal</span>
-          <span>$<span id="subtotal_display"></span></span>
-        </div>
-        <div class="total-row">
-          <span>Total Retail</span>
-          <span>$<span id="retail_display"></span></span>
-        </div>
+
         <div class="total-row bold">
           <span>TOTAL A PAGAR</span>
           <span>$<span id="total_display"></span></span>
@@ -296,11 +290,7 @@
         <span id="estado"></span>
       </div>
 
-      <!-- Elementos ocultos para compatibilidad -->
-      <div class="label" style="display: none">
-        <h1 class="nro_mesa" id="nro_mesa_id"></h1>
-        <h3 class="direccion" id="nro_direccion_id"></h3>
-      </div>
+      <!-- Información del cliente -->
     </div>
 
     <script>
@@ -332,13 +322,8 @@
       // Estado (para compatibilidad)
       document.getElementById("estado").textContent = estado;
 
-      // Asignar valores a elementos ocultos para compatibilidad
-      if (document.getElementById("nro_mesa_id")) {
-        document.getElementById("nro_mesa_id").textContent = nro_mesa;
-      }
-      if (document.getElementById("nro_direccion_id")) {
-        document.getElementById("nro_direccion_id").textContent = direc;
-      }
+      // Llenar información del cliente
+      document.getElementById("cliente_info").textContent = nro_mesa;
     </script>
   </body>
 </html>
