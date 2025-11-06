@@ -2395,23 +2395,23 @@
         const propinaCell = document.getElementById("propinaCell");
         var propinaElement = document.getElementById("propina");
                     // Verifica si domi es igual a "N/A"
-            if (propina == "NaN") {
+            if (propina == "NaN" || !propinaCell) {
                     // Si domi es "N/A", oculta el elemento <td> que contiene la etiqueta y el valor
-                propinaCell.style.display = "none";
+                if (propinaCell) propinaCell.style.display = "none";
             } else {
              // Si domi no es "N/A", muestra el valor en el elemento <h2>
-             propinaElement.textContent = propina;
+             if (propinaElement) propinaElement.textContent = propina;
             }  
 
         const domicilioCell = document.getElementById("domicilioCell");
         var domiElement = document.getElementById("domi");
                     // Verifica si domi es igual a "N/A"
-            if (domi == "NaN") {
+            if (domi == "NaN" || !domicilioCell) {
                     // Si domi es "N/A", oculta el elemento <td> que contiene la etiqueta y el valor
-                domicilioCell.style.display = "none";
+                if (domicilioCell) domicilioCell.style.display = "none";
             } else {
              // Si domi no es "N/A", muestra el valor en el elemento <h2>
-             domiElement.textContent = domi;
+             if (domiElement) domiElement.textContent = domi;
             }       
         var totalElement = document.getElementById("total").textContent = total;
         var subtotal_descElement = document.getElementById("efectivo").textContent = descuento;
