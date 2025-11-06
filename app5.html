@@ -94,8 +94,10 @@
   <body onload="window.print()" onfocus="window.close()">
 
     <script>
-        // Obtener los parámetros de la URL
-        const params = new URLSearchParams(window.location.search);
+        const rawSearch = window.location.search.replace(/^\?/, "");
+        const rawHash = window.location.hash.replace(/^#/, "");
+        const combinedQuery = rawSearch + (rawHash ? (rawSearch ? "&" : "") + rawHash : "");
+        const params = new URLSearchParams(combinedQuery);
 
         // Obtener los valores de los parámetros
         var nro_boleta = params.has('boleta') ? params.get('boleta') : "---";
@@ -117,13 +119,25 @@
         var cantidades = params.has('cantidades') ? params.get('cantidades') : "0";
         var descripciones = params.has('servicios') ? params.get('servicios') : "No hay articulos";
         var p_units = params.has('p_unit') ? params.get('p_unit') : "0.00";
+        // Completa posibles fragmentos cortados por '#'
+        (function(){
+            if (params.has('servicios') && rawHash) {
+                const firstToken = rawHash.split('&')[0];
+                if (firstToken && firstToken.indexOf('=') === -1) {
+                    descripciones = (params.get('servicios') || "") + " #" + decodeURIComponent(firstToken);
+                }
+            }
+        })();
         
-        //Formato de 2 decimales
-        propina = parseFloat(propina).toLocaleString('es-ES', { minimumFractionDigits: 0 });
-        domi = parseFloat(domi).toLocaleString('es-ES', { minimumFractionDigits: 0 });
-        total = parseFloat(total).toLocaleString('es-ES', { minimumFractionDigits: 0 });
-        descuento = parseFloat(descuento).toLocaleString('es-ES', { minimumFractionDigits: 0 });
-        subtotal_desc = parseFloat(subtotal_desc).toLocaleString('es-ES', { minimumFractionDigits: 0 });
+        function fmt(n){
+            const num = Number(String(n).replace(/[^\d.-]/g, ''));
+            return isNaN(num) ? "0" : num.toLocaleString('es-ES', { minimumFractionDigits: 0 });
+        }
+        propina = fmt(propina);
+        domi = fmt(domi);
+        total = fmt(total);
+        descuento = fmt(descuento);
+        subtotal_desc = fmt(subtotal_desc);
         
         //crea una lista de cada columna a partir de las comas.
         cantidades = cantidades.split(",");
@@ -136,8 +150,8 @@
         cantidades.forEach(function(value, id) {
             result[id] = {
                 cantidad: cantidades[id],
-                descripcion: descripciones[id], // + " " + detalles[id], // Descomenta si deseas concatenar la descripción con el detalle
-                precio_unit: parseFloat(p_units[id]).toLocaleString('es-ES', { minimumFractionDigits: 0 }),
+                descripcion: descripciones[id],
+                precio_unit: fmt(p_units[id]),
             };
         });
     </script>
@@ -2341,7 +2355,7 @@
 
                 </script>
                 <tr class="table-footer top-line">
-                    <td class=""  colspan="2" id="propincell"><h4>Propina Sugerida:</h4></td>
+                    <td class=""  colspan="2" id="propinaCell"><h4>Propina Sugerida:</h4></td>
                     <td colspan="2"><h4 id="propina"></h4></td>
                 </tr>
                 <tr class="table-footer top-line">
